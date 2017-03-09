@@ -359,22 +359,33 @@ HGCalAnalysis::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 	int reachedEE=0; // compute the extrapolations for the particles reaching EE and for the gen particles
 	if (myTrack.noEndVertex() || myTrack.genpartIndex()>=0)
 	  {
-	    // went up to calorimeter: propagate it
-	    reachedEE=1;
+
 	    RawParticle part(myTrack.momentum(),myTrack.vertex().position());
 	    part.setID(myTrack.id());
-	    BaseParticlePropagator myPropag(part,140,layerPositions[0],3.8);
+	    BaseParticlePropagator myPropag(part,160,layerPositions[0],3.8);
 	    myPropag.propagate();
-	    vtx=myPropag.vertex();
+	    unsigned result=myPropag.getSuccess();
+	    vtx=myPropag.propagated().vertex();
+	    unsigned nlayers=40;
 
-	    for(unsigned il=0;il<40;++il) {
+	    if (myTrack.noEndVertex()) {
+	      if (result==2 && vtx.Rho()> 25) {
+		reachedEE=2;
+	      }
+	      if (result==1) reachedEE=1;
+	    }
+	    else  // in that case we propagate only to the first layers
+	      nlayers=1;
+	    
+	    for(unsigned il=0;il<nlayers;++il) {
 	      myPropag.setPropagationConditions(140,layerPositions[il],false);
 	      if(il>0) // set PID 22 for a straight-line extrapolation after the 1st layer
 		myPropag.setID(22);
 	      myPropag.propagate();
-	      xp.push_back(myPropag.vertex().x());
-	      yp.push_back(myPropag.vertex().y());
-	      zp.push_back(myPropag.vertex().z());
+	      RawParticle propParticle=myPropag.propagated();
+	      xp.push_back(propParticle.vertex().x());
+	      yp.push_back(propParticle.vertex().y());
+	      zp.push_back(propParticle.vertex().z());
 	    }
 	  }
 	else
