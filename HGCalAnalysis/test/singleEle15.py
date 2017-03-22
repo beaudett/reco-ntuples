@@ -48,7 +48,7 @@ process.TFileService = cms.Service("TFileService",
                                    )
 #process.imagingClusterHGCal.ecut = cms.double(0.01)
 #process.imagingClusterHGCal.eventsToDisplay = cms.untracked.uint32(2)
-process.hgcalLayerClusters.minClusters = cms.uint32(0)
+process.hgcalLayerClusters.minClusters = cms.uint32(3)
 process.hgcalLayerClusters.realSpaceCone = cms.bool(True)
 process.hgcalLayerClusters.multiclusterRadius = cms.double(2.)
 process.hgcalLayerClusters.dependSensor = cms.bool(True)

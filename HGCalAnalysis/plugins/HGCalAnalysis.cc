@@ -537,6 +537,7 @@ HGCalAnalysis::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
       int ncoreHit = 0;
       int layer = 0;
       int rhSeed = 0;
+      float energyBoundary = 0.;
 
       for(unsigned int j = 0; j < hf.size(); j++){
 	//here we loop over detid/fraction pairs
@@ -550,6 +551,8 @@ HGCalAnalysis::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 	  flags = 0x2;
 	const HGCRecHit *hit = hitmap[hf[j].first];
 	layer = recHitTools.getLayerWithOffset(hf[j].first);
+	//	std::cout << " fraction " << hf[j].second << " " <<  int(hf[j].second) << std::endl;
+	if(hf[j].second==0) energyBoundary += hit->energy();
 
 	const GlobalPoint position = recHitTools.getPosition(hf[j].first);
 	const unsigned int detid = hf[j].first;
@@ -573,7 +576,7 @@ HGCalAnalysis::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
       }
       double pt = (*it)->energy() / cosh((*it)->eta());
       acdc->push_back(ACluster2d((*it)->x(),(*it)->y(),(*it)->z(),
-				 (*it)->eta(),(*it)->phi(),pt,(*it)->energy(),
+				 (*it)->eta(),(*it)->phi(),pt,(*it)->energy(),energyBoundary,
 				 layer, ncoreHit,hf.size(),i, rhSeed));
       storedLayerClusters.insert((*it));
       cluster_index++;
@@ -589,21 +592,33 @@ HGCalAnalysis::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
                                   multiClusters[i].energy(),
 				  multiClusters[i].size(),
 				  cl2dSeed));
-
+    
   }
-
+  
   // Fills the additional 2d layers
+
   for(unsigned ic=0 ; ic < nclus ; ++ic )  {
     edm::Ptr<reco::BasicCluster> clusterPtr(clusterHandle,ic);
     if(storedLayerClusters.find(clusterPtr)==storedLayerClusters.end() ) {
       double pt = clusterPtr->energy() / cosh(clusterPtr->eta());
       if(pt>layerClusterPtThreshold) {
 	int layer = recHitTools.getLayerWithOffset(clusterPtr->hitsAndFractions()[0].first);
+	const std::vector< std::pair<DetId, float> > &hf = clusterPtr->hitsAndFractions();
+	int nCoreHit = 0;
+	float energyBoundary = 0.;
+	for(unsigned int j = 0; j < hf.size(); j++){
+	  const HGCRecHit *hit = hitmap[hf[j].first];
+	  //here we loop over detid/fraction pairs
+	  nCoreHit += int(hf[j].second);
+	  if(hf[j].second==0.) energyBoundary += hit->energy();
+	}
 	acdc->push_back(ACluster2d(clusterPtr->x(),clusterPtr->y(),clusterPtr->z(),
-				   clusterPtr->eta(),clusterPtr->phi(),pt,clusterPtr->energy(),
-				   layer, 0, (int)clusterPtr->hitsAndFractions().size(),-1, -1));
+				   clusterPtr->eta(),clusterPtr->phi(),pt,clusterPtr->energy(), energyBoundary,
+				   layer, nCoreHit, (int)clusterPtr->hitsAndFractions().size(),-1, -1));
       }
     }
+//    else
+//      std::cout << " already stored" << std::endl;
   }
 
   // loop over simClusters

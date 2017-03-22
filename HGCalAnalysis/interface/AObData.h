@@ -87,7 +87,7 @@ class ACluster2d : public TObject
 public:
 
   ACluster2d() :  x(0.),y(0.),z(0.),eta(-1000.),phi(-1000.),pt(-1000.),
-    energy(-1000.),layer(0),nhitCore(0),nhitAll(0), multicluster(-1), rechitSeed(-1)
+    energy(-1000.),energyBoundary(-1000.),layer(0),nhitCore(0),nhitAll(0),multicluster(-1), rechitSeed(-1)
   {
   }
   ACluster2d(  float i_x,
@@ -95,15 +95,16 @@ public:
 	       float i_z,
 	       float i_eta,
 	       float i_phi,
-           float i_pt,
+	       float i_pt,
 	       float i_energy,
+	       float i_energyBoundary,
 	       int i_layer,
 	       int i_nhitCore,
 	       int i_nhitAll,
 	       int i_multicluster,
 	       int i_rechitSeed) :
   x(i_x),y(i_y),z(i_z),eta(i_eta),phi(i_phi),pt(i_pt),
-    energy(i_energy),layer(i_layer),
+    energy(i_energy),energyBoundary(i_energyBoundary),layer(i_layer),
     nhitCore(i_nhitCore),nhitAll(i_nhitAll),multicluster(i_multicluster), rechitSeed(i_rechitSeed)
   {
   }
@@ -116,6 +117,7 @@ public:
   float phi;
   float pt;
   float energy;
+  float energyBoundary;
   int layer;
   int nhitCore;
   int nhitAll;
