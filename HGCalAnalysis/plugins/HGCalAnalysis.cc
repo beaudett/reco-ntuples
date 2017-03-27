@@ -5,7 +5,7 @@
 #include "FWCore/Framework/interface/Event.h"
 #include "FWCore/Framework/interface/ESHandle.h"
 #include "FWCore/Framework/interface/MakerMacros.h"
-
+#include "FWCore/Framework/interface/ConsumesCollector.h"
 #include "FWCore/ParameterSet/interface/ParameterSet.h"
 
 #include "Geometry/HGCalGeometry/interface/HGCalGeometry.h"
@@ -51,6 +51,7 @@
 
 #include "RecoLocalCalo/HGCalRecAlgos/interface/HGCalDepthPreClusterer.h"
 #include "RecoLocalCalo/HGCalRecAlgos/interface/RecHitTools.h"
+#include "RecoLocalCalo/HGCalRecAlgos/interface/ClusterTools.h"
 
 #include "RecoNtuples/HGCalAnalysis/interface/AEvent.h"
 #include "RecoNtuples/HGCalAnalysis/interface/AObData.h"
@@ -121,10 +122,12 @@ private:
   int                        algo;
   HGCalDepthPreClusterer     pre;
   hgcal::RecHitTools         recHitTools;
+  hgcal::ClusterTools        * clusterTools;
 
   // -------convenient tool to deal with simulated tracks
   FSimEvent * mySimEvent;
   edm::ParameterSet particleFilter;
+  edm::ParameterSet rechitCollections;
   std::vector <float> layerPositions;
 
   // and also the magnetic field
@@ -140,11 +143,14 @@ HGCalAnalysis::HGCalAnalysis(const edm::ParameterSet& iConfig) :
   propagationPtThreshold(iConfig.getUntrackedParameter<double>("propagationPtThreshold",3.0)),
   detector(iConfig.getParameter<std::string >("detector")),
   rawRecHits(iConfig.getParameter<bool>("rawRecHits")),
-  particleFilter(iConfig.getParameter<edm::ParameterSet>("TestParticleFilter"))
+  particleFilter(iConfig.getParameter<edm::ParameterSet>("TestParticleFilter")),
+  rechitCollections(iConfig.getParameter<edm::ParameterSet>("HGCRecHitCollections"))
 {
   //now do what ever initialization is needed
   usesResource("TFileService");
   mySimEvent = new FSimEvent(particleFilter);
+  auto collector = consumesCollector();
+  clusterTools = new hgcal::ClusterTools(rechitCollections,collector);
 
   if(detector=="all") {
     _recHitsEE = consumes<HGCRecHitCollection>(edm::InputTag("HGCalRecHit","HGCEERecHits"));
@@ -232,6 +238,8 @@ HGCalAnalysis::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 
   ParticleTable::Sentry ptable(mySimEvent->theTable());
   recHitTools.getEventSetup(iSetup);
+  clusterTools->getEventSetup(iSetup);
+  clusterTools->getEvent(iEvent);
 
   unsigned int npart = 0;
   unsigned int nhit  = 0;
@@ -575,8 +583,10 @@ HGCalAnalysis::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 
       }
       double pt = (*it)->energy() / cosh((*it)->eta());
+      double sigmaetaeta,sigmaphiphi,sigmaetaetal,sigmaphiphil;
+      clusterTools->getWidths(**it,sigmaetaeta,sigmaphiphi,sigmaetaetal,sigmaphiphil);
       acdc->push_back(ACluster2d((*it)->x(),(*it)->y(),(*it)->z(),
-				 (*it)->eta(),(*it)->phi(),pt,(*it)->energy(),energyBoundary,
+				 (*it)->eta(),(*it)->phi(),pt,(*it)->energy(),energyBoundary,sigmaetaeta,sigmaphiphi,sigmaetaetal,sigmaphiphil,
 				 layer, ncoreHit,hf.size(),i, rhSeed));
       storedLayerClusters.insert((*it));
       cluster_index++;
@@ -612,8 +622,10 @@ HGCalAnalysis::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 	  nCoreHit += int(hf[j].second);
 	  if(hf[j].second==0.) energyBoundary += hit->energy();
 	}
+	double sigmaetaeta,sigmaphiphi,sigmaetaetal,sigmaphiphil;
+	clusterTools->getWidths(*clusterPtr,sigmaetaeta,sigmaphiphi,sigmaetaetal,sigmaphiphil);
 	acdc->push_back(ACluster2d(clusterPtr->x(),clusterPtr->y(),clusterPtr->z(),
-				   clusterPtr->eta(),clusterPtr->phi(),pt,clusterPtr->energy(), energyBoundary,
+				   clusterPtr->eta(),clusterPtr->phi(),pt,clusterPtr->energy(), energyBoundary,sigmaetaeta,sigmaphiphi,sigmaetaetal,sigmaphiphil,
 				   layer, nCoreHit, (int)clusterPtr->hitsAndFractions().size(),-1, -1));
       }
     }

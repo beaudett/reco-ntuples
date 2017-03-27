@@ -15,7 +15,7 @@ from FastSimulation.Event.ParticleFilter_cfi import *
 #process.load("RecoLocalCalo.HGCalRecProducers.hgcalLayerClusters_cfi")
 
 
-process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(1000) )
+process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(-1) )
 
 process.source = cms.Source("PoolSource",
     # replace 'myfile.root' with the source file you want to use
@@ -28,6 +28,7 @@ process.source = cms.Source("PoolSource",
 )
 
 
+from RecoLocalCalo.HGCalRecProducers.HGCRecHitCollections_cfi import *
 
 process.ana = cms.EDAnalyzer('HGCalAnalysis',
                              detector = cms.string("all"),
@@ -35,7 +36,8 @@ process.ana = cms.EDAnalyzer('HGCalAnalysis',
                              readOfficialReco = cms.bool(True),
                              readCaloParticles = cms.bool(False),
                              layerClusterPtThreshold = cms.double(0.01),  # All LayerCluster belonging to a multicluster are saved; this Pt threshold applied to the others
-                             TestParticleFilter = ParticleFilterBlock.ParticleFilter
+                             TestParticleFilter = ParticleFilterBlock.ParticleFilter,
+                             HGCRecHitCollections = HGCRecHitCollectionsBlock.HGCRecHitCollections,
                              )
 
 #Quite important
@@ -43,7 +45,7 @@ process.ana.TestParticleFilter.protonEMin = cms.double(100000)
 process.ana.TestParticleFilter.etaMax = cms.double(3.1)
 
 process.TFileService = cms.Service("TFileService",
-                                   fileName = cms.string("singleElePt15-v3.root")
+                                   fileName = cms.string("singleElePt15-V7.root")
 
                                    )
 #process.imagingClusterHGCal.ecut = cms.double(0.01)
