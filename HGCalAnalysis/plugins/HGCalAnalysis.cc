@@ -353,6 +353,7 @@ HGCalAnalysis::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 	math::XYZTLorentzVectorD vtx(0,0,0,0);
 
 	int reachedEE=0; // compute the extrapolations for the particles reaching EE and for the gen particles
+	double fbrem=-1.;
 	if (myTrack.noEndVertex() || myTrack.genpartIndex()>=0)
 	  {
 
@@ -367,6 +368,12 @@ HGCalAnalysis::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 	    if (myTrack.noEndVertex()) {
 	      if (result==2 && vtx.Rho()> 25) {
 		reachedEE=2;
+		double dpt=0;
+
+		for(int i=0;i<myTrack.nDaughters();++i)
+		  dpt+=myTrack.daughter(i).momentum().pt();
+		if(abs(myTrack.type())==11)
+		  fbrem = dpt/myTrack.momentum().pt();
 	      }
 	      if (result==1) reachedEE=1;
 	    }
@@ -389,7 +396,7 @@ HGCalAnalysis::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 	    vtx = myTrack.endVertex().position();
 	  }
 
-	AGenPart part(myTrack.momentum().eta(),myTrack.momentum().phi(),myTrack.momentum().pt(),myTrack.momentum().energy(),vtx.x(),vtx.y(),vtx.z(),myTrack.type(),myTrack.genpartIndex(),reachedEE);
+	AGenPart part(myTrack.momentum().eta(),myTrack.momentum().phi(),myTrack.momentum().pt(),myTrack.momentum().energy(),vtx.x(),vtx.y(),vtx.z(),fbrem,myTrack.type(),myTrack.genpartIndex(),reachedEE);
 	part.setExtrapolations(xp,yp,zp);
 	agpc->push_back(part);
       }
