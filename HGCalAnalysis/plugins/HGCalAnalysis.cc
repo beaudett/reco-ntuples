@@ -358,11 +358,13 @@ HGCalAnalysis::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 	  {
 
 	    RawParticle part(myTrack.momentum(),myTrack.vertex().position());
-	    part.setID(myTrack.id());
+	    part.setID(myTrack.type());
+	    //	    std::cout << " Charge " << part.charge() << std::endl;
 	    BaseParticlePropagator myPropag(part,160,layerPositions[0],3.8);
 	    myPropag.propagate();
 	    unsigned result=myPropag.getSuccess();
 	    vtx=myPropag.propagated().vertex();
+	    //	    std::cout << " vtx " << vtx << " myTrack.phi " << myTrack.momentum().phi() << " " << vtx.phi() <<  std::endl;
 	    unsigned nlayers=40;
 
 	    if (myTrack.noEndVertex()) {
