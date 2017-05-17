@@ -83,7 +83,6 @@ void clearVariables();
 
 void retrieveLayerPositions(const edm::EventSetup&, unsigned layers);
 
-void computePCA(const reco::CaloCluster &);
 // ---------parameters ----------------------------
 bool readOfficialReco;
 bool readCaloParticles;
@@ -110,8 +109,6 @@ edm::EDGetTokenT<edm::HepMCProduct> _hev;
 edm::EDGetTokenT<std::vector<reco::Track> > _tracks;
 
 TTree                     *t;
-
-TPrincipal *pca_;
 
 ////////////////////
 // event
@@ -273,6 +270,8 @@ std::vector <float> layerPositions;
 
 // and also the magnetic field
 MagneticField const * aField;
+
+std::unique_ptr<TPrincipal> pca_;
 };
 
 HGCalAnalysis::HGCalAnalysis() {
@@ -286,11 +285,12 @@ HGCalAnalysis::HGCalAnalysis(const edm::ParameterSet& iConfig) :
 	propagationPtThreshold(iConfig.getUntrackedParameter<double>("propagationPtThreshold",3.0)),
 	detector(iConfig.getParameter<std::string >("detector")),
 	rawRecHits(iConfig.getParameter<bool>("rawRecHits")),
-	particleFilter(iConfig.getParameter<edm::ParameterSet>("TestParticleFilter"))
+	particleFilter(iConfig.getParameter<edm::ParameterSet>("TestParticleFilter")),
+	pca_(new TPrincipal(3,"D"))
 {
 	// now do what ever initialization is needed
 	mySimEvent = new FSimEvent(particleFilter);
-	pca_ = new TPrincipal(3,"D"); 
+
 
 	if(detector=="all") {
 		_recHitsEE = consumes<HGCRecHitCollection>(edm::InputTag("HGCalRecHit","HGCEERecHits"));
@@ -854,8 +854,9 @@ HGCalAnalysis::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 	for(unsigned int i = 0; i < multiClusters.size(); i++) {
 
 		int cl2dSeed = 0;
+		pca_.reset(new TPrincipal(3,"D"));
 		std::vector<unsigned int> cl2dIndices;
-
+		
 		for(reco::HGCalMultiCluster::component_iterator it = multiClusters[i].begin();
 		    it!=multiClusters[i].end(); it++) {
 
@@ -1186,11 +1187,13 @@ void HGCalAnalysis::fillLayerCluster(const edm::Ptr<reco::CaloCluster>& layerClu
 		layer = recHitTools.getLayerWithOffset(rh_detid);
 		const HGCRecHit *hit = hitmap[rh_detid];
 		ncoreHit += int(fraction);
-		if(multiClusterIndex>=0) {
+		if(multiClusterIndex>=0 and fraction>0) {
 		  pcavars[0] = recHitTools.getPosition(rh_detid).x();
 		  pcavars[1] = recHitTools.getPosition(rh_detid).y();
 		  pcavars[2] = recHitTools.getPosition(rh_detid).z();
-		  pca_->AddRow(pcavars);
+		  //		  std::cout << pcavars[0] << " " << pcavars[1] << " " << pcavars[2] << std::endl;
+		  if(pcavars[2]!=0)
+		    pca_->AddRow(pcavars);
 		}
 
 		if (fillRecHits) {
