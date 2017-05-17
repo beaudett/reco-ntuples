@@ -43,7 +43,7 @@ process.ana.TestParticleFilter.protonEMin = cms.double(100000)
 process.ana.TestParticleFilter.etaMax = cms.double(3.1)
 
 process.TFileService = cms.Service("TFileService",
-                                   fileName = cms.string("hgcalNtuple-pca-100.root")
+                                   fileName = cms.string("hgcalNtuple-pca-100-test.root")
 
                                    )
 
