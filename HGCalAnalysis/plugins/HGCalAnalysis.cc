@@ -808,6 +808,9 @@ HGCalAnalysis::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 			genpart_gen.push_back(myTrack.genpartIndex());
 			genpart_reachedEE.push_back(reachedEE);
 			genpart_fromBeamPipe.push_back(true);
+			genpart_posx.push_back(xp);
+			genpart_posy.push_back(yp);
+			genpart_posz.push_back(zp);
 		}
 	}
 	//make a map detid-rechit
