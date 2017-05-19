@@ -764,7 +764,6 @@ HGCalAnalysis::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 				unsigned nlayers=40;
 
 				if (myTrack.noEndVertex()) {
-				  std::cout << " result " << result << " " << vtx.Rho() << std::endl;
 					if (result==2 && vtx.Rho()> 25) {
 						reachedEE=2;
 						double dpt=0;
