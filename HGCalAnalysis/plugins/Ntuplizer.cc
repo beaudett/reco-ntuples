@@ -75,6 +75,9 @@
 #include "DataFormats/Common/interface/TriggerResults.h"
 #include "FWCore/Common/interface/TriggerNames.h"
 
+
+#include "EgammaTools/EgammaAnalysis/interface/ElectronBDTHelper.h"
+
 //
 // class declaration
 //
@@ -110,6 +113,8 @@ PileupSrc_ ("addPileupInfo")
     genparticles_ = consumes<std::vector<reco::GenParticle>>(genPartInputTag_);
     puSummaryInfo_ = consumes<std::vector<PileupSummaryInfo> > (PileupSrc_);
     hev_ = consumes<edm::HepMCProduct>(edm::InputTag("generatorSmeared"));
+
+    bdtHelper_ = new ElectronBDTHelper(iConfig ,consumesCollector());
 }
 
 // =============================================================================================
@@ -312,7 +317,7 @@ void Ntuplizer::beginJob()
   // Electron ID
   _mytree->Branch("ele_mvaphys14",   &ele_mvaphys14); //  "ele_mvaphys14[50]/D");
   _mytree->Branch("ele_mvaphys14fix",   &ele_mvaphys14fix); //   "ele_mvaphys14fix[50]/D");
-
+  _mytree->Branch("ele_bdt",   &ele_bdt);
 
   //  _mytree->Branch("ele_ecalRegressionEnergy",   ele_ecalRegressionEnergy,   "ele_ecalRegressionEnergy[50]/D");
   //   _mytree->Branch("ele_ecalRegressionError", ele_ecalRegressionError, "ele_ecalRegressionError[50]/D");
@@ -419,8 +424,8 @@ void Ntuplizer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 // =============================================================================================
 {
    using namespace edm;
-
    Init();
+   bdtHelper_->eventInit(iEvent,iSetup);
 
    //cout << "salut" << endl;
 
@@ -690,6 +695,8 @@ void Ntuplizer::FillElectrons(const edm::Event& iEvent, const edm::EventSetup& i
     // 		cout << "REGRESSION " << ele_ecalRegressionEnergy.push_back(<< " " << ele_ecalRegressionError.push_back( << endl;
     //
     ele_mva.push_back( 0); //ielectrons->mva() ;
+    ele_bdt.push_back(-2.);
+    ele_bdt.push_back(ielectrons->isEB() ? bdtHelper_->computeBDT(*ielectrons) : -2.);
     //
     if (ielectrons->isEB()) ele_isbarrel.push_back(1);
     else  ele_isbarrel.push_back(0);
@@ -1193,6 +1200,7 @@ void Ntuplizer::Init()
     ele_nbrem.clear();
     //
     ele_mva.clear();
+    ele_bdt.clear();
     ele_isbarrel.clear();
     ele_isendcap.clear();
     ele_isEBetaGap.clear();

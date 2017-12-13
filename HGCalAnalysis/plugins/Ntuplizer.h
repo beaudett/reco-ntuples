@@ -7,6 +7,8 @@
 #include "FWCore/Framework/interface/Event.h"
 #include "FWCore/Framework/interface/MakerMacros.h"
 #include "FWCore/ParameterSet/interface/ParameterSet.h"
+#include "FWCore/Framework/interface/ConsumesCollector.h"
+
 #include <DataFormats/HepMCCandidate/interface/GenParticleFwd.h>
 #include "DataFormats/Math/interface/LorentzVector.h"
 #include <FWCore/Framework/interface/ESHandle.h>
@@ -42,6 +44,8 @@
 #include<vector>
 
 using namespace std;
+
+class ElectronBDTHelper;
 
 class Ntuplizer : public edm::one::EDAnalyzer<edm::one::WatchRuns, edm::one::SharedResources> {
 public:
@@ -107,6 +111,7 @@ private:
     //tree
     TTree *_mytree;
     TLorentzVector myvector ;
+    ElectronBDTHelper * bdtHelper_;
 
     //global variables
     int _nEvent, _nRun, _nLumi;
@@ -225,6 +230,7 @@ private:
     //std::vector<double>  ele_eidHZZVeryLoose; ele_eidHZZLoose; ele_eidHZZMedium; ele_eidHZZTight; ele_eidHZZSuperTight;
     std::vector<double>  ele_eidMVATrig;
     std::vector<double> ele_eidMVANoTrig;
+    std::vector<double> ele_bdt;
     //std::vector<double>  ele_HZZisoTk;ele_HZZisoTk5;  ele_HZZisoEcal; ele_HZZisoHcal;ele_HZZisoComb;
     //
     std::vector<double>  ele_pfChargedHadIso;

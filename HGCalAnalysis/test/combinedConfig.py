@@ -11,13 +11,15 @@ process.load("FWCore.MessageService.MessageLogger_cfi")
 process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
 process.load('RecoLocalCalo.HGCalRecProducers.HGCalLocalRecoSequence_cff')
 process.load("TrackingTools.TransientTrack.TransientTrackBuilder_cfi")
+process.load('EgammaTools.EgammaAnalysis.HGCalElectronFilter_cfi')
+
 
 from Configuration.AlCa.GlobalTag import GlobalTag
 process.GlobalTag = GlobalTag(process.GlobalTag, 'auto:phase2_realistic', '')
 from FastSimulation.Event.ParticleFilter_cfi import *
 from RecoLocalCalo.HGCalRecProducers.HGCalRecHit_cfi import dEdX_weights as dEdX
 
-process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(40) )
+process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(500) )
 
 process.source = cms.Source("PoolSource",
     # replace 'myfile.root' with the source file you want to use
@@ -78,7 +80,16 @@ process.ana = cms.EDAnalyzer('HGCalAnalysis_EleID',
                              EERecHits = cms.InputTag('HGCalRecHit:HGCEERecHits'),
                              FHRecHits = cms.InputTag('HGCalRecHit:HGCHEFRecHits'),
                              BHRecHits = cms.InputTag('HGCalRecHit:HGCHEBRecHits'),
-                             PFMultiClusters = cms.InputTag('particleFlowClusterHGCalFromMultiCl')
+                             PFMultiClusters = cms.InputTag('particleFlowClusterHGCalFromMultiCl'),
+                             pcaRadius = cms.double(3.),
+                             vertices = cms.InputTag("offlinePrimaryVertices"),
+                             puSummary = cms.InputTag("addPileupInfo"),
+                             beamSpot = cms.InputTag("offlineBeamSpot"),
+                             barrelLowPt = cms.FileInPath('EgammaTools/EgammaAnalysis/data/EIDmva_EB_1020_oldbarreltdrDR01_BDT.weights.xml'),
+                             barrelHighPt = cms.FileInPath('EgammaTools/EgammaAnalysis/data/EIDmva_EB_20_oldbarreltdrDR01_BDT.weights.xml'),
+                             endcapLowPt = cms.FileInPath('EgammaTools/EgammaAnalysis/data/HGCEIDmva_1020_trackepshowernoisolonghgcaltdrV3DR01preselmatch_BDT.weights.xml'),
+                             endcapHighPt = cms.FileInPath('EgammaTools/EgammaAnalysis/data/HGCEIDmva_20_trackepshowernoisolonghgcaltdrV3DR01preselmatch_BDT.weights.xml'),
+                             GsfElectrons = cms.InputTag('cleanedEcalDrivenGsfElectronsFromMultiCl')
 )
 
 process.ana.TestParticleFilter.protonEMin = cms.double(100000)
@@ -87,14 +98,22 @@ process.ana.TestParticleFilter.etaMax = cms.double(3.1)
 fileFormat = 'AOD'
 
 process.ntuplizer = cms.EDAnalyzer('Ntuplizer',
-                                   EleTag      = cms.InputTag('gedGsfElectrons'),
+                                   EleTag      = cms.InputTag('cleanedEcalDrivenGsfElectronsFromMultiCl'),
                                    VerticesTag = cms.InputTag('offlinePrimaryVertices'),
                                    isMC = cms.bool(True),
-                                   GenParticles = cms.InputTag('prunedGenParticles')
+                                   GenParticles = cms.InputTag('prunedGenParticles'),
+                                   vertices = cms.InputTag("offlinePrimaryVertices"),
+                                   puSummary = cms.InputTag("addPileupInfo"),
+                                   beamSpot = cms.InputTag("offlineBeamSpot"),
+                                   barrelLowPt = cms.FileInPath('EgammaTools/EgammaAnalysis/data/EIDmva_EB_1020_oldbarreltdrDR01_BDT.weights.xml'),
+                                   barrelHighPt = cms.FileInPath('EgammaTools/EgammaAnalysis/data/EIDmva_EB_20_oldbarreltdrDR01_BDT.weights.xml'),
+                                   endcapLowPt = cms.FileInPath('EgammaTools/EgammaAnalysis/data/HGCEIDmva_1020_trackepshowernoisolonghgcaltdrV3DR01preselmatch_BDT.weights.xml'),
+                                   endcapHighPt = cms.FileInPath('EgammaTools/EgammaAnalysis/data/HGCEIDmva_20_trackepshowernoisolonghgcaltdrV3DR01preselmatch_BDT.weights.xml'),
+                                   pcaRadius = cms.double(3.)
                                    )
 
 process.TFileService = cms.Service("TFileService",
-                                   fileName = cms.string("hgcalNtupleDYLL-test.root")
+                                   fileName = cms.string("hgcalNtupleDYLL-test2.root")
 
                                    )
 
@@ -110,5 +129,5 @@ if reRunClustering:
     #process.hgcalLayerClusters.deltac = cms.vdouble(2.,3.,5.) #specify delta c for each subdetector separately
     process.p = cms.Path(process.hgcalLayerClusters+process.printTree+process.ana)
 else:
-    process.p = cms.Path(process.prunedGenParticles+process.electrons+process.electronFilter+process.ana+process.ntuplizer)
-    #process.p = cms.Path(process.prunedGenParticles+process.electrons+process.electronFilter+process.ana)
+    #process.p = cms.Path(process.prunedGenParticles+process.electrons+process.electronFilter+process.cleanedEcalDrivenGsfElectronsFromMultiCl+process.ana+process.ntuplizer)
+    process.p = cms.Path(process.prunedGenParticles+process.electrons+process.electronFilter+process.ana)
