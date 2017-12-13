@@ -16,6 +16,8 @@
 #include "DataFormats/HcalDetId/interface/HcalDetId.h"
 #include "DataFormats/ParticleFlowReco/interface/PFCluster.h"
 #include "DataFormats/VertexReco/interface/Vertex.h"
+#include "DataFormats/JetReco/interface/GenJet.h"
+
 #include "Geometry/HGCalGeometry/interface/HGCalGeometry.h"
 #include "Geometry/HcalTowerAlgo/interface/HcalGeometry.h"
 #include "SimDataFormats/CaloAnalysis/interface/CaloParticle.h"
@@ -193,10 +195,12 @@ class HGCalAnalysis_EleID : public edm::one::EDAnalyzer<edm::one::WatchRuns, edm
   edm::InputTag bsInputTag_;
   edm::InputTag puSummary_;
   edm::InputTag electronTag_;
+  edm::InputTag genJetsTag_;
   bool storeMoreGenInfo_;
   bool storeGenParticleExtrapolation_;
   bool storePCAvariables_;
   bool storeElectrons_;
+  bool storeGenJets_;
   bool recomputePCA_;
   bool includeHaloPCA_;
   double layerClusterPtThreshold_;
@@ -231,6 +235,7 @@ class HGCalAnalysis_EleID : public edm::one::EDAnalyzer<edm::one::WatchRuns, edm
   edm::EDGetTokenT<std::vector<reco::Track>> tracks_;
     */
   edm::EDGetTokenT<std::vector<reco::GsfElectron>> electrons_;
+  edm::EDGetTokenT<std::vector<reco::GenJet>> genJets_;
     //edm::EDGetTokenT<edm::ValueMap<reco::CaloClusterPtr>> electrons_ValueMapClusters_;
   edm::EDGetTokenT<std::vector<reco::Vertex>> vertices_;
   edm::EDGetTokenT<std::vector<PileupSummaryInfo>> puSummaryInfo_;
@@ -298,6 +303,18 @@ class HGCalAnalysis_EleID : public edm::one::EDAnalyzer<edm::one::WatchRuns, edm
   std::vector<int> gen_pdgid_;
   std::vector<int> gen_status_;
   std::vector<std::vector<int>> gen_daughters_;
+
+  /////////////////////////
+  // reco::GenJets
+  //
+  std::vector<float> genjet_eta_;
+  std::vector<float> genjet_phi_;
+  std::vector<float> genjet_pt_;
+  std::vector<float> genjet_energy_;
+  std::vector<int> genjet_nconstituents_;
+  std::vector<float> genjet_highestGenpT_;
+  std::vector<int> genjet_highestGenPid_;
+
     /*
   ////////////////////
   // RecHits
@@ -568,10 +585,12 @@ HGCalAnalysis_EleID::HGCalAnalysis_EleID(const edm::ParameterSet &iConfig)
       bsInputTag_(iConfig.existsAs<edm::InputTag>("BeamSpot")? iConfig.getParameter<edm::InputTag>("BeamSpot"): edm::InputTag("offlineBeamSpot")),
       puSummary_(iConfig.existsAs<edm::InputTag>("PUSummary")? iConfig.getParameter<edm::InputTag>("PUSummary"): edm::InputTag("addPileupInfo")),
       electronTag_(iConfig.existsAs<edm::InputTag>("GsfElectrons")? iConfig.getParameter<edm::InputTag>("GsfElectrons"): edm::InputTag("ecalDrivenGsfElectronsFromMultiCl")),
+      genJetsTag_(iConfig.existsAs<edm::InputTag>("GenJets")? iConfig.getParameter<edm::InputTag>("GenJets"): edm::InputTag("ak4GenJets")),
       storeMoreGenInfo_(iConfig.getParameter<bool>("storeGenParticleOrigin")),
       storeGenParticleExtrapolation_(iConfig.getParameter<bool>("storeGenParticleExtrapolation")),
       storePCAvariables_(iConfig.getParameter<bool>("storePCAvariables")),
       storeElectrons_(iConfig.getParameter<bool>("storeElectrons")),
+      storeGenJets_(iConfig.getParameter<bool>("storeGenJets")),
       recomputePCA_(iConfig.getParameter<bool>("recomputePCA")),
       includeHaloPCA_(iConfig.getParameter<bool>("includeHaloPCA")),
       layerClusterPtThreshold_(iConfig.getParameter<double>("layerClusterPtThreshold")),
@@ -600,6 +619,9 @@ HGCalAnalysis_EleID::HGCalAnalysis_EleID(const edm::ParameterSet &iConfig)
   if (readGen_) {
       genParticles_ = consumes<std::vector<reco::GenParticle>>(genPartInputTag_);
     }
+  if (storeGenJets_) {
+      genJets_ = consumes<std::vector<reco::GenJet>>(genJetsTag_);
+  }
       //consumes<std::vector<reco::GsfElectron>>(edm::InputTag("ecalDrivenGsfElectrons"));
 
   /*
@@ -693,6 +715,15 @@ HGCalAnalysis_EleID::HGCalAnalysis_EleID(const edm::ParameterSet &iConfig)
     t_->Branch("gen_pdgid", &gen_pdgid_);
     t_->Branch("gen_status", &gen_status_);
     t_->Branch("gen_daughters", &gen_daughters_);
+  }
+  if (storeGenJets_ ) {
+    t_->Branch("genjet_eta", &genjet_eta_);
+    t_->Branch("genjet_phi", &genjet_phi_);
+    t_->Branch("genjet_pt", &genjet_pt_);
+    t_->Branch("genjet_energy", &genjet_energy_);
+    t_->Branch("genjet_nconstituents", &genjet_nconstituents_);
+    t_->Branch("genjet_leadingGenpT", &genjet_highestGenpT_);
+    t_->Branch("genjet_leadingGenPid", &genjet_highestGenPid_);
   }
   /*
   ////////////////////
@@ -990,6 +1021,17 @@ void HGCalAnalysis_EleID::clearVariables() {
   gen_pdgid_.clear();
   gen_status_.clear();
   gen_daughters_.clear();
+
+  ////////////////////
+  //  reco::genJets
+  //
+  genjet_eta_.clear();
+  genjet_phi_.clear();
+  genjet_pt_.clear();
+  genjet_energy_.clear();
+  genjet_nconstituents_.clear();
+  genjet_highestGenpT_.clear();
+  genjet_highestGenPid_.clear();
 
   /*
   ////////////////////
@@ -1441,6 +1483,30 @@ void HGCalAnalysis_EleID::analyze(const edm::Event &iEvent, const edm::EventSetu
       }
       gen_daughters_.push_back(daughters);
     }
+  }
+
+  if (storeGenJets_) {
+      Handle<std::vector<reco::GenJet>> genJetHandle;
+      iEvent.getByToken(genJets_, genJetHandle);
+      for (std::vector<reco::GenJet>::const_iterator it_p = genJetHandle->begin();
+        it_p != genJetHandle->end(); ++it_p) {
+        genjet_eta_.push_back(it_p->eta());
+        genjet_phi_.push_back(it_p->phi());
+        genjet_pt_.push_back(it_p->pt());
+        genjet_energy_.push_back(it_p->energy());
+        genjet_nconstituents_.push_back(it_p->getGenConstituents().size());
+
+        float highestGenpT_ = -1. ;
+        int highestGenPid_ = -999;
+        for (int icons=0; icons < genjet_nconstituents_.back() ; ++icons) {
+            if ( it_p->getGenConstituents()[icons]->pt() > highestGenpT_ ){
+                highestGenpT_ = it_p->getGenConstituents()[icons]->pt();
+                highestGenPid_ = it_p->getGenConstituents()[icons]->pdgId();
+                }
+            }
+        genjet_highestGenpT_.push_back(highestGenpT_);
+        genjet_highestGenPid_.push_back(highestGenPid_);
+        }
   }
 
   /*

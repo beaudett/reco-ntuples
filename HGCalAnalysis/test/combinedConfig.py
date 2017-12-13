@@ -19,7 +19,7 @@ process.GlobalTag = GlobalTag(process.GlobalTag, 'auto:phase2_realistic', '')
 from FastSimulation.Event.ParticleFilter_cfi import *
 from RecoLocalCalo.HGCalRecProducers.HGCalRecHit_cfi import dEdX_weights as dEdX
 
-process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(500) )
+process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(100) )
 
 process.source = cms.Source("PoolSource",
     # replace 'myfile.root' with the source file you want to use
@@ -72,6 +72,7 @@ process.ana = cms.EDAnalyzer('HGCalAnalysis_EleID',
                              storeGenParticleExtrapolation = cms.bool(False),
                              storePCAvariables = cms.bool(False),
                              storeElectrons = cms.bool(True),
+                             storeGenJets = cms.bool(True),
                              recomputePCA = cms.bool(False),
                              includeHaloPCA = cms.bool(True),
                              dEdXWeights = dEdX,
@@ -130,4 +131,4 @@ if reRunClustering:
     process.p = cms.Path(process.hgcalLayerClusters+process.printTree+process.ana)
 else:
     #process.p = cms.Path(process.prunedGenParticles+process.electrons+process.electronFilter+process.cleanedEcalDrivenGsfElectronsFromMultiCl+process.ana+process.ntuplizer)
-    process.p = cms.Path(process.prunedGenParticles+process.electrons+process.electronFilter+process.ana)
+    process.p = cms.Path(process.prunedGenParticles+process.electrons+process.electronFilter+process.cleanedEcalDrivenGsfElectronsFromMultiCl+process.ana)
