@@ -19,7 +19,7 @@ process.GlobalTag = GlobalTag(process.GlobalTag, 'auto:phase2_realistic', '')
 from FastSimulation.Event.ParticleFilter_cfi import *
 from RecoLocalCalo.HGCalRecProducers.HGCalRecHit_cfi import dEdX_weights as dEdX
 
-process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(100) )
+process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(500) )
 
 process.source = cms.Source("PoolSource",
     # replace 'myfile.root' with the source file you want to use
@@ -28,16 +28,22 @@ process.source = cms.Source("PoolSource",
 #        '/store/relval/CMSSW_9_3_0_pre4/RelValTTbar_14TeV/GEN-SIM-RECO/PU25ns_93X_upgrade2023_realistic_v0_D17PU200-v1/00000/082041D3-1E89-E711-80AA-0242AC130002.root'
 #       'root://polgrid4.in2p3.fr//store/relval/CMSSW_9_3_2/RelValSingleElectronPt15Eta1p7_2p7/GEN-SIM-RECO/93X_upgrade2023_realistic_v2_2023D17noPU-v1/10000/D0226E59-00A7-E711-AA65-0CC47A78A426.root'
 #'root://cms-xrd-global.cern.ch//store/relval/CMSSW_9_3_2/RelValZEE_14/GEN-SIM-RECO/PU25ns_93X_upgrade2023_realistic_v2_2023D17PU200-v1/10000/5CBBD7E3-F7AA-E711-904B-E0071B7A0670.root',
-'root://cms-xrd-global.cern.ch//store/mc/PhaseIITDRFall17DR/DYToLL-M-50_0J_14TeV-madgraphMLM-pythia8/GEN-SIM-RECO/PU200_93X_upgrade2023_realistic_v2-v1/00000/BE500A88-5EAD-E711-8E07-0242AC110012.root',
-'root://cms-xrd-global.cern.ch//store/mc/PhaseIITDRFall17DR/DYToLL-M-50_0J_14TeV-madgraphMLM-pythia8/GEN-SIM-RECO/PU200_93X_upgrade2023_realistic_v2-v1/00000/78E43CDF-5EAD-E711-BA4A-0242AC110002.root',
-'root://cms-xrd-global.cern.ch//store/mc/PhaseIITDRFall17DR/DYToLL-M-50_0J_14TeV-madgraphMLM-pythia8/GEN-SIM-RECO/PU200_93X_upgrade2023_realistic_v2-v1/00000/04CC740B-5FAD-E711-9A4A-0242AC110008.root',
-'root://cms-xrd-global.cern.ch//store/mc/PhaseIITDRFall17DR/DYToLL-M-50_0J_14TeV-madgraphMLM-pythia8/GEN-SIM-RECO/PU200_93X_upgrade2023_realistic_v2-v1/00000/A8640BD9-5EAD-E711-9B9C-0242AC11000D.root',
-'root://cms-xrd-global.cern.ch//store/mc/PhaseIITDRFall17DR/DYToLL-M-50_0J_14TeV-madgraphMLM-pythia8/GEN-SIM-RECO/PU200_93X_upgrade2023_realistic_v2-v1/00000/7C369899-61AD-E711-BB03-0242AC110006.root',
-'root://cms-xrd-global.cern.ch//store/mc/PhaseIITDRFall17DR/DYToLL-M-50_0J_14TeV-madgraphMLM-pythia8/GEN-SIM-RECO/PU200_93X_upgrade2023_realistic_v2-v1/00000/A0A41AA9-88AD-E711-8744-0242AC110002.root',
-'root://cms-xrd-global.cern.ch//store/mc/PhaseIITDRFall17DR/DYToLL-M-50_0J_14TeV-madgraphMLM-pythia8/GEN-SIM-RECO/PU200_93X_upgrade2023_realistic_v2-v1/00000/6AB7D61B-91AD-E711-937F-0242AC11000F.root',
-'root://cms-xrd-global.cern.ch//store/mc/PhaseIITDRFall17DR/DYToLL-M-50_0J_14TeV-madgraphMLM-pythia8/GEN-SIM-RECO/PU200_93X_upgrade2023_realistic_v2-v1/00000/68C29CB7-8AAD-E711-A9D8-0242AC110003.root',
-'root://cms-xrd-global.cern.ch//store/mc/PhaseIITDRFall17DR/DYToLL-M-50_0J_14TeV-madgraphMLM-pythia8/GEN-SIM-RECO/PU200_93X_upgrade2023_realistic_v2-v1/00000/7AED1C74-6BAD-E711-ABA3-0242AC110010.root',
-'root://cms-xrd-global.cern.ch//store/mc/PhaseIITDRFall17DR/DYToLL-M-50_0J_14TeV-madgraphMLM-pythia8/GEN-SIM-RECO/PU200_93X_upgrade2023_realistic_v2-v1/00000/4409A3B7-8EAD-E711-800A-0242AC110009.root',
+#'root://cms-xrd-global.cern.ch//store/mc/PhaseIITDRFall17DR/DYToLL-M-50_0J_14TeV-madgraphMLM-pythia8/GEN-SIM-RECO/PU200_93X_upgrade2023_realistic_v2-v1/00000/BE500A88-5EAD-E711-8E07-0242AC110012.root',
+#'root://cms-xrd-global.cern.ch//store/mc/PhaseIITDRFall17DR/DYToLL-M-50_0J_14TeV-madgraphMLM-pythia8/GEN-SIM-RECO/PU200_93X_upgrade2023_realistic_v2-v1/00000/78E43CDF-5EAD-E711-BA4A-0242AC110002.root',
+#'root://cms-xrd-global.cern.ch//store/mc/PhaseIITDRFall17DR/DYToLL-M-50_0J_14TeV-madgraphMLM-pythia8/GEN-SIM-RECO/PU200_93X_upgrade2023_realistic_v2-v1/00000/04CC740B-5FAD-E711-9A4A-0242AC110008.root',
+#'root://cms-xrd-global.cern.ch//store/mc/PhaseIITDRFall17DR/DYToLL-M-50_0J_14TeV-madgraphMLM-pythia8/GEN-SIM-RECO/PU200_93X_upgrade2023_realistic_v2-v1/00000/A8640BD9-5EAD-E711-9B9C-0242AC11000D.root',
+#'root://cms-xrd-global.cern.ch//store/mc/PhaseIITDRFall17DR/DYToLL-M-50_0J_14TeV-madgraphMLM-pythia8/GEN-SIM-RECO/PU200_93X_upgrade2023_realistic_v2-v1/00000/7C369899-61AD-E711-BB03-0242AC110006.root',
+#'root://cms-xrd-global.cern.ch//store/mc/PhaseIITDRFall17DR/DYToLL-M-50_0J_14TeV-madgraphMLM-pythia8/GEN-SIM-RECO/PU200_93X_upgrade2023_realistic_v2-v1/00000/A0A41AA9-88AD-E711-8744-0242AC110002.root',
+#'root://cms-xrd-global.cern.ch//store/mc/PhaseIITDRFall17DR/DYToLL-M-50_0J_14TeV-madgraphMLM-pythia8/GEN-SIM-RECO/PU200_93X_upgrade2023_realistic_v2-v1/00000/6AB7D61B-91AD-E711-937F-0242AC11000F.root',
+#'root://cms-xrd-global.cern.ch//store/mc/PhaseIITDRFall17DR/DYToLL-M-50_0J_14TeV-madgraphMLM-pythia8/GEN-SIM-RECO/PU200_93X_upgrade2023_realistic_v2-v1/00000/68C29CB7-8AAD-E711-A9D8-0242AC110003.root',
+#'root://cms-xrd-global.cern.ch//store/mc/PhaseIITDRFall17DR/DYToLL-M-50_0J_14TeV-madgraphMLM-pythia8/GEN-SIM-RECO/PU200_93X_upgrade2023_realistic_v2-v1/00000/7AED1C74-6BAD-E711-ABA3-0242AC110010.root',
+#'root://cms-xrd-global.cern.ch//store/mc/PhaseIITDRFall17DR/DYToLL-M-50_0J_14TeV-madgraphMLM-pythia8/GEN-SIM-RECO/PU200_93X_upgrade2023_realistic_v2-v1/00000/4409A3B7-8EAD-E711-800A-0242AC110009.root',
+'root://cms-xrd-global.cern.ch//store/mc/PhaseIITDRFall17DR/DYToLL-M-50_1J_14TeV-madgraphMLM-pythia8/GEN-SIM-RECO/PU200_93X_upgrade2023_realistic_v2-v1/150000/54C9C9CF-47AE-E711-B7C8-34E6D7E3878E.root',
+'root://cms-xrd-global.cern.ch//store/mc/PhaseIITDRFall17DR/DYToLL-M-50_1J_14TeV-madgraphMLM-pythia8/GEN-SIM-RECO/PU200_93X_upgrade2023_realistic_v2-v1/150000/48072DCC-47AE-E711-B252-90E2BAD1BDF0.root',
+'root://cms-xrd-global.cern.ch//store/mc/PhaseIITDRFall17DR/DYToLL-M-50_1J_14TeV-madgraphMLM-pythia8/GEN-SIM-RECO/PU200_93X_upgrade2023_realistic_v2-v1/150000/F2E9646B-01AF-E711-A922-1CB72C1B2EF4.root',
+'root://cms-xrd-global.cern.ch//store/mc/PhaseIITDRFall17DR/DYToLL-M-50_1J_14TeV-madgraphMLM-pythia8/GEN-SIM-RECO/PU200_93X_upgrade2023_realistic_v2-v1/150000/26EF48CB-29AF-E711-8238-B499BAABCF0E.root',
+'root://cms-xrd-global.cern.ch//store/mc/PhaseIITDRFall17DR/DYToLL-M-50_1J_14TeV-madgraphMLM-pythia8/GEN-SIM-RECO/PU200_93X_upgrade2023_realistic_v2-v1/150000/38DA4A4C-09AF-E711-94DD-441EA1733FD6.root',
+'root://cms-xrd-global.cern.ch//store/mc/PhaseIITDRFall17DR/DYToLL-M-50_1J_14TeV-madgraphMLM-pythia8/GEN-SIM-RECO/PU200_93X_upgrade2023_realistic_v2-v1/30000/9AFB2315-07AF-E711-AA1F-0CC47A7C354A.root'
     ),
     duplicateCheckMode = cms.untracked.string("noDuplicateCheck")
 )
@@ -73,10 +79,12 @@ process.ana = cms.EDAnalyzer('HGCalAnalysis_EleID',
                              storePCAvariables = cms.bool(False),
                              storeElectrons = cms.bool(True),
                              storeGenJets = cms.bool(True),
+                             storeGenParts = cms.bool(False),
                              recomputePCA = cms.bool(False),
                              includeHaloPCA = cms.bool(True),
                              dEdXWeights = dEdX,
                              layerClusterPtThreshold = cms.double(-1),  # All LayerCluster belonging to a multicluster are saved; this Pt threshold applied to the others
+                             genJetPtThreshold = cms.double(10.),
                              TestParticleFilter = ParticleFilterBlock.ParticleFilter,
                              EERecHits = cms.InputTag('HGCalRecHit:HGCEERecHits'),
                              FHRecHits = cms.InputTag('HGCalRecHit:HGCHEFRecHits'),
