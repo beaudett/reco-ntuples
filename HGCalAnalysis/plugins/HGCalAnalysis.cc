@@ -268,39 +268,39 @@ class HGCalAnalysis : public edm::one::EDAnalyzer<edm::one::WatchRuns, edm::one:
   ////////////////////
   // RecHits
   // associated to layer clusters
-  std::vector<float> rechit_eta_;
-  std::vector<float> rechit_phi_;
-  std::vector<float> rechit_pt_;
+//  std::vector<float> rechit_eta_;
+ // std::vector<float> rechit_phi_;
+  // std::vector<float> rechit_pt_;
   std::vector<float> rechit_energy_;
-  std::vector<float> rechit_x_;
-  std::vector<float> rechit_y_;
-  std::vector<float> rechit_z_;
-  std::vector<float> rechit_time_;
-  std::vector<float> rechit_thickness_;
-  std::vector<int> rechit_layer_;
-  std::vector<int> rechit_wafer_;
-  std::vector<int> rechit_cell_;
+ // std::vector<float> rechit_x_;
+  //std::vector<float> rechit_y_;
+  //std::vector<float> rechit_z_;
+  //std::vector<float> rechit_time_;
+  //std::vector<float> rechit_thickness_;
+  //std::vector<int> rechit_layer_;
+  //std::vector<int> rechit_wafer_;
+  //std::vector<int> rechit_cell_;
   std::vector<unsigned int> rechit_detid_;
-  std::vector<bool> rechit_isHalf_;
-  std::vector<int> rechit_flags_;
+  //std::vector<bool> rechit_isHalf_;
+  //std::vector<int> rechit_flags_;
   std::vector<int> rechit_cluster2d_;
 
   ////////////////////
   // layer clusters
   //
-  std::vector<float> cluster2d_eta_;
-  std::vector<float> cluster2d_phi_;
-  std::vector<float> cluster2d_pt_;
-  std::vector<float> cluster2d_energy_;
-  std::vector<float> cluster2d_x_;
-  std::vector<float> cluster2d_y_;
-  std::vector<float> cluster2d_z_;
-  std::vector<int> cluster2d_layer_;
-  std::vector<int> cluster2d_nhitCore_;
-  std::vector<int> cluster2d_nhitAll_;
+ // std::vector<float> cluster2d_eta_;
+ // std::vector<float> cluster2d_phi_;
+ // std::vector<float> cluster2d_pt_;
+ // std::vector<float> cluster2d_energy_;
+ // std::vector<float> cluster2d_x_;
+ // std::vector<float> cluster2d_y_;
+ // std::vector<float> cluster2d_z_;
+ // std::vector<int> cluster2d_layer_;
+ // std::vector<int> cluster2d_nhitCore_;
+ // std::vector<int> cluster2d_nhitAll_;
   std::vector<int> cluster2d_multicluster_;
   std::vector<std::vector<unsigned int>> cluster2d_rechits_;
-  std::vector<int> cluster2d_rechitSeed_;
+ // std::vector<int> cluster2d_rechitSeed_;
 
   ////////////////////
   // multi clusters
@@ -339,44 +339,44 @@ class HGCalAnalysis : public edm::one::EDAnalyzer<edm::one::WatchRuns, edm::one:
   ////////////////////
   // sim clusters
   //
-  std::vector<float> simcluster_eta_;
-  std::vector<float> simcluster_phi_;
-  std::vector<float> simcluster_pt_;
-  std::vector<float> simcluster_energy_;
-  std::vector<float> simcluster_simEnergy_;
-  std::vector<std::vector<uint32_t>> simcluster_hits_;
-  std::vector<std::vector<int>> simcluster_hits_indices_;
-  std::vector<std::vector<float>> simcluster_fractions_;
-  std::vector<std::vector<unsigned int>> simcluster_layers_;
-  std::vector<std::vector<unsigned int>> simcluster_wafers_;
-  std::vector<std::vector<unsigned int>> simcluster_cells_;
+ //std::vector<float> simcluster_eta_;
+ //std::vector<float> simcluster_phi_;
+ //std::vector<float> simcluster_pt_;
+ //std::vector<float> simcluster_energy_;
+ //std::vector<float> simcluster_simEnergy_;
+ //std::vector<std::vector<uint32_t>> simcluster_hits_;
+ //std::vector<std::vector<int>> simcluster_hits_indices_;
+ //std::vector<std::vector<float>> simcluster_fractions_;
+ //std::vector<std::vector<unsigned int>> simcluster_layers_;
+ //std::vector<std::vector<unsigned int>> simcluster_wafers_;
+ //std::vector<std::vector<unsigned int>> simcluster_cells_;
 
   ////////////////////
   // PF clusters
   //
-  std::vector<float> pfcluster_eta_;
-  std::vector<float> pfcluster_phi_;
-  std::vector<float> pfcluster_pt_;
-  std::vector<float> pfcluster_energy_;
-  std::vector<float> pfcluster_correctedEnergy_;
-  std::vector<std::vector<uint32_t>> pfcluster_hits_;
-  std::vector<std::vector<float>> pfcluster_fractions_;
+ // std::vector<float> pfcluster_eta_;
+ // std::vector<float> pfcluster_phi_;
+ // std::vector<float> pfcluster_pt_;
+ // std::vector<float> pfcluster_energy_;
+ // std::vector<float> pfcluster_correctedEnergy_;
+ // std::vector<std::vector<uint32_t>> pfcluster_hits_;
+ // std::vector<std::vector<float>> pfcluster_fractions_;
 
   ////////////////////
   // PF clusters From MultiClusters
   //
-  std::vector<ROOT::Math::XYZPoint> pfclusterFromMultiCl_pos_;
-  std::vector<float> pfclusterFromMultiCl_eta_;
-  std::vector<float> pfclusterFromMultiCl_phi_;
-  std::vector<float> pfclusterFromMultiCl_pt_;
-  std::vector<float> pfclusterFromMultiCl_energy_;
-  std::vector<float> pfclusterFromMultiCl_energyEE_;
-  std::vector<float> pfclusterFromMultiCl_energyFH_;
-  std::vector<float> pfclusterFromMultiCl_energyBH_;
-  std::vector<float> pfclusterFromMultiCl_correctedEnergy_;
-  std::vector<std::vector<uint32_t>> pfclusterFromMultiCl_hits_;
-  std::vector<std::vector<float>> pfclusterFromMultiCl_fractions_;
-  std::vector<std::vector<uint32_t>> pfclusterFromMultiCl_rechits_;
+  //std::vector<ROOT::Math::XYZPoint> pfclusterFromMultiCl_pos_;
+  //std::vector<float> pfclusterFromMultiCl_eta_;
+  //std::vector<float> pfclusterFromMultiCl_phi_;
+  //std::vector<float> pfclusterFromMultiCl_pt_;
+  //std::vector<float> pfclusterFromMultiCl_energy_;
+  //std::vector<float> pfclusterFromMultiCl_energyEE_;
+  //std::vector<float> pfclusterFromMultiCl_energyFH_;
+  //std::vector<float> pfclusterFromMultiCl_energyBH_;
+  //std::vector<float> pfclusterFromMultiCl_correctedEnergy_;
+  //std::vector<std::vector<uint32_t>> pfclusterFromMultiCl_hits_;
+  //std::vector<std::vector<float>> pfclusterFromMultiCl_fractions_;
+  //std::vector<std::vector<uint32_t>> pfclusterFromMultiCl_rechits_;
 
   ////////////////////
   // Ecal Driven GsfElectrons From MultiClusters
@@ -604,39 +604,39 @@ HGCalAnalysis::HGCalAnalysis(const edm::ParameterSet &iConfig)
   ////////////////////
   // RecHits
   // associated to layer clusters
-  t_->Branch("rechit_eta", &rechit_eta_);
-  t_->Branch("rechit_phi", &rechit_phi_);
-  t_->Branch("rechit_pt", &rechit_pt_);
+//  t_->Branch("rechit_eta", &rechit_eta_);
+//  t_->Branch("rechit_phi", &rechit_phi_);
+//  t_->Branch("rechit_pt", &rechit_pt_);
   t_->Branch("rechit_energy", &rechit_energy_);
-  t_->Branch("rechit_x", &rechit_x_);
-  t_->Branch("rechit_y", &rechit_y_);
-  t_->Branch("rechit_z", &rechit_z_);
-  t_->Branch("rechit_time", &rechit_time_);
-  t_->Branch("rechit_thickness", &rechit_thickness_);
-  t_->Branch("rechit_layer", &rechit_layer_);
-  t_->Branch("rechit_wafer", &rechit_wafer_);
-  t_->Branch("rechit_cell", &rechit_cell_);
+//  t_->Branch("rechit_x", &rechit_x_);
+//  t_->Branch("rechit_y", &rechit_y_);
+//  t_->Branch("rechit_z", &rechit_z_);
+//  t_->Branch("rechit_time", &rechit_time_);
+//  t_->Branch("rechit_thickness", &rechit_thickness_);
+//  t_->Branch("rechit_layer", &rechit_layer_);
+//  t_->Branch("rechit_wafer", &rechit_wafer_);
+//  t_->Branch("rechit_cell", &rechit_cell_);
   t_->Branch("rechit_detid", &rechit_detid_);
-  t_->Branch("rechit_isHalf", &rechit_isHalf_);
-  t_->Branch("rechit_flags", &rechit_flags_);
+//  t_->Branch("rechit_isHalf", &rechit_isHalf_);
+//  t_->Branch("rechit_flags", &rechit_flags_);
   t_->Branch("rechit_cluster2d", &rechit_cluster2d_);
 
   ////////////////////
   // layer clusters
   //
-  t_->Branch("cluster2d_eta", &cluster2d_eta_);
-  t_->Branch("cluster2d_phi", &cluster2d_phi_);
-  t_->Branch("cluster2d_pt", &cluster2d_pt_);
-  t_->Branch("cluster2d_energy", &cluster2d_energy_);
-  t_->Branch("cluster2d_x", &cluster2d_x_);
-  t_->Branch("cluster2d_y", &cluster2d_y_);
-  t_->Branch("cluster2d_z", &cluster2d_z_);
-  t_->Branch("cluster2d_layer", &cluster2d_layer_);
-  t_->Branch("cluster2d_nhitCore", &cluster2d_nhitCore_);
-  t_->Branch("cluster2d_nhitAll", &cluster2d_nhitAll_);
+ //t_->Branch("cluster2d_eta", &cluster2d_eta_);
+ //t_->Branch("cluster2d_phi", &cluster2d_phi_);
+ //t_->Branch("cluster2d_pt", &cluster2d_pt_);
+ //t_->Branch("cluster2d_energy", &cluster2d_energy_);
+ //t_->Branch("cluster2d_x", &cluster2d_x_);
+ //t_->Branch("cluster2d_y", &cluster2d_y_);
+ //t_->Branch("cluster2d_z", &cluster2d_z_);
+ //t_->Branch("cluster2d_layer", &cluster2d_layer_);
+ //t_->Branch("cluster2d_nhitCore", &cluster2d_nhitCore_);
+ //t_->Branch("cluster2d_nhitAll", &cluster2d_nhitAll_);
   t_->Branch("cluster2d_multicluster", &cluster2d_multicluster_);
   t_->Branch("cluster2d_rechits", &cluster2d_rechits_);
-  t_->Branch("cluster2d_rechitSeed", &cluster2d_rechitSeed_);
+  //t_->Branch("cluster2d_rechitSeed", &cluster2d_rechitSeed_);
 
   ////////////////////
   // multi clusters
@@ -678,44 +678,44 @@ HGCalAnalysis::HGCalAnalysis(const edm::ParameterSet &iConfig)
   ////////////////////
   // sim clusters
   //
-  t_->Branch("simcluster_eta", &simcluster_eta_);
-  t_->Branch("simcluster_phi", &simcluster_phi_);
-  t_->Branch("simcluster_pt", &simcluster_pt_);
-  t_->Branch("simcluster_energy", &simcluster_energy_);
-  t_->Branch("simcluster_simEnergy", &simcluster_simEnergy_);
-  t_->Branch("simcluster_hits", &simcluster_hits_);
-  t_->Branch("simcluster_hits_indices", &simcluster_hits_indices_);
-  t_->Branch("simcluster_fractions", &simcluster_fractions_);
-  t_->Branch("simcluster_layers", &simcluster_layers_);
-  t_->Branch("simcluster_wafers", &simcluster_wafers_);
-  t_->Branch("simcluster_cells", &simcluster_cells_);
+ // t_->Branch("simcluster_eta", &simcluster_eta_);
+ // t_->Branch("simcluster_phi", &simcluster_phi_);
+ // t_->Branch("simcluster_pt", &simcluster_pt_);
+ // t_->Branch("simcluster_energy", &simcluster_energy_);
+ // t_->Branch("simcluster_simEnergy", &simcluster_simEnergy_);
+ // t_->Branch("simcluster_hits", &simcluster_hits_);
+ // t_->Branch("simcluster_hits_indices", &simcluster_hits_indices_);
+ // t_->Branch("simcluster_fractions", &simcluster_fractions_);
+ // t_->Branch("simcluster_layers", &simcluster_layers_);
+ // t_->Branch("simcluster_wafers", &simcluster_wafers_);
+ // t_->Branch("simcluster_cells", &simcluster_cells_);
 
   ////////////////////
   // PF clusters
   //
-  t_->Branch("pfcluster_eta", &pfcluster_eta_);
-  t_->Branch("pfcluster_phi", &pfcluster_phi_);
-  t_->Branch("pfcluster_pt", &pfcluster_pt_);
-  t_->Branch("pfcluster_energy", &pfcluster_energy_);
-  t_->Branch("pfcluster_correctedEnergy", &pfcluster_correctedEnergy_);
-  t_->Branch("pfcluster_hits", &pfcluster_hits_);
-  t_->Branch("pfcluster_fractions", &pfcluster_fractions_);
+ // t_->Branch("pfcluster_eta", &pfcluster_eta_);
+ // t_->Branch("pfcluster_phi", &pfcluster_phi_);
+ // t_->Branch("pfcluster_pt", &pfcluster_pt_);
+ // t_->Branch("pfcluster_energy", &pfcluster_energy_);
+ // t_->Branch("pfcluster_correctedEnergy", &pfcluster_correctedEnergy_);
+ // t_->Branch("pfcluster_hits", &pfcluster_hits_);
+ // t_->Branch("pfcluster_fractions", &pfcluster_fractions_);
 
   ////////////////////
   // PF clusters From MultiClusters
   //
-  t_->Branch("pfclusterFromMultiCl_pos", &pfclusterFromMultiCl_pos_);
-  t_->Branch("pfclusterFromMultiCl_eta", &pfclusterFromMultiCl_eta_);
-  t_->Branch("pfclusterFromMultiCl_phi", &pfclusterFromMultiCl_phi_);
-  t_->Branch("pfclusterFromMultiCl_pt", &pfclusterFromMultiCl_pt_);
-  t_->Branch("pfclusterFromMultiCl_energy", &pfclusterFromMultiCl_energy_);
-  t_->Branch("pfclusterFromMultiCl_energyEE", &pfclusterFromMultiCl_energyEE_);
-  t_->Branch("pfclusterFromMultiCl_energyFH", &pfclusterFromMultiCl_energyFH_);
-  t_->Branch("pfclusterFromMultiCl_energyBH", &pfclusterFromMultiCl_energyBH_);
-  t_->Branch("pfclusterFromMultiCl_correctedEnergy", &pfclusterFromMultiCl_correctedEnergy_);
-  t_->Branch("pfclusterFromMultiCl_hits", &pfclusterFromMultiCl_hits_);
-  t_->Branch("pfclusterFromMultiCl_fractions", &pfclusterFromMultiCl_fractions_);
-  t_->Branch("pfclusterFromMultiCl_rechits", &pfclusterFromMultiCl_rechits_);
+  //t_->Branch("pfclusterFromMultiCl_pos", &pfclusterFromMultiCl_pos_);
+  //t_->Branch("pfclusterFromMultiCl_eta", &pfclusterFromMultiCl_eta_);
+  //t_->Branch("pfclusterFromMultiCl_phi", &pfclusterFromMultiCl_phi_);
+  //t_->Branch("pfclusterFromMultiCl_pt", &pfclusterFromMultiCl_pt_);
+  //t_->Branch("pfclusterFromMultiCl_energy", &pfclusterFromMultiCl_energy_);
+  //t_->Branch("pfclusterFromMultiCl_energyEE", &pfclusterFromMultiCl_energyEE_);
+  //t_->Branch("pfclusterFromMultiCl_energyFH", &pfclusterFromMultiCl_energyFH_);
+  //t_->Branch("pfclusterFromMultiCl_energyBH", &pfclusterFromMultiCl_energyBH_);
+  //t_->Branch("pfclusterFromMultiCl_correctedEnergy", &pfclusterFromMultiCl_correctedEnergy_);
+  //t_->Branch("pfclusterFromMultiCl_hits", &pfclusterFromMultiCl_hits_);
+  //t_->Branch("pfclusterFromMultiCl_fractions", &pfclusterFromMultiCl_fractions_);
+  //t_->Branch("pfclusterFromMultiCl_rechits", &pfclusterFromMultiCl_rechits_);
 
   ////////////////////
   // Ecal Driven Gsf Electrons From MultiClusters
@@ -855,40 +855,40 @@ void HGCalAnalysis::clearVariables() {
   ////////////////////
   // RecHits
   // associated to layer clusters
-  rechit_eta_.clear();
-  rechit_phi_.clear();
-  rechit_pt_.clear();
+//  rechit_eta_.clear();
+//  rechit_phi_.clear();
+ // rechit_pt_.clear();
   rechit_energy_.clear();
-  rechit_x_.clear();
-  rechit_y_.clear();
-  rechit_z_.clear();
-  rechit_time_.clear();
-  rechit_thickness_.clear();
-  rechit_layer_.clear();
-  rechit_wafer_.clear();
-  rechit_cell_.clear();
+ // rechit_x_.clear();
+ // rechit_y_.clear();
+  //rechit_z_.clear();
+  //rechit_time_.clear();
+  //rechit_thickness_.clear();
+  //rechit_layer_.clear();
+  //rechit_wafer_.clear();
+  //rechit_cell_.clear();
   rechit_detid_.clear();
-  rechit_isHalf_.clear();
-  rechit_flags_.clear();
+  //rechit_isHalf_.clear();
+  //rechit_flags_.clear();
   rechit_cluster2d_.clear();
   detIdToRecHitIndexMap_.clear();
 
   ////////////////////
   // layer clusters
   //
-  cluster2d_eta_.clear();
-  cluster2d_phi_.clear();
-  cluster2d_pt_.clear();
-  cluster2d_energy_.clear();
-  cluster2d_x_.clear();
-  cluster2d_y_.clear();
-  cluster2d_z_.clear();
-  cluster2d_layer_.clear();
-  cluster2d_nhitCore_.clear();
-  cluster2d_nhitAll_.clear();
+  //cluster2d_eta_.clear();
+  //cluster2d_phi_.clear();
+  //cluster2d_pt_.clear();
+  //cluster2d_energy_.clear();
+  //cluster2d_x_.clear();
+  //cluster2d_y_.clear();
+  //cluster2d_z_.clear();
+  //cluster2d_layer_.clear();
+  //cluster2d_nhitCore_.clear();
+  //cluster2d_nhitAll_.clear();
   cluster2d_multicluster_.clear();
   cluster2d_rechits_.clear();
-  cluster2d_rechitSeed_.clear();
+ // cluster2d_rechitSeed_.clear();
 
   ////////////////////
   // multi clusters
@@ -927,44 +927,44 @@ void HGCalAnalysis::clearVariables() {
   ////////////////////
   // sim clusters
   //
-  simcluster_eta_.clear();
-  simcluster_phi_.clear();
-  simcluster_pt_.clear();
-  simcluster_energy_.clear();
-  simcluster_simEnergy_.clear();
-  simcluster_hits_.clear();
-  simcluster_hits_indices_.clear();
-  simcluster_fractions_.clear();
-  simcluster_layers_.clear();
-  simcluster_wafers_.clear();
-  simcluster_cells_.clear();
+  //simcluster_eta_.clear();
+  //simcluster_phi_.clear();
+  //simcluster_pt_.clear();
+  //simcluster_energy_.clear();
+  //simcluster_simEnergy_.clear();
+  //simcluster_hits_.clear();
+  //simcluster_hits_indices_.clear();
+  //simcluster_fractions_.clear();
+  //simcluster_layers_.clear();
+  //simcluster_wafers_.clear();
+  //simcluster_cells_.clear();
 
   ////////////////////
   // PF clusters
   //
-  pfcluster_eta_.clear();
-  pfcluster_phi_.clear();
-  pfcluster_pt_.clear();
-  pfcluster_energy_.clear();
-  pfcluster_correctedEnergy_.clear();
-  pfcluster_hits_.clear();
-  pfcluster_fractions_.clear();
+  //pfcluster_eta_.clear();
+  //pfcluster_phi_.clear();
+  //pfcluster_pt_.clear();
+  //pfcluster_energy_.clear();
+  //pfcluster_correctedEnergy_.clear();
+  //pfcluster_hits_.clear();
+  //pfcluster_fractions_.clear();
 
   ////////////////////
   // PF clusters From MultiClusters
   //
-  pfclusterFromMultiCl_pos_.clear();
-  pfclusterFromMultiCl_eta_.clear();
-  pfclusterFromMultiCl_phi_.clear();
-  pfclusterFromMultiCl_pt_.clear();
-  pfclusterFromMultiCl_energy_.clear();
-  pfclusterFromMultiCl_energyEE_.clear();
-  pfclusterFromMultiCl_energyFH_.clear();
-  pfclusterFromMultiCl_energyBH_.clear();
-  pfclusterFromMultiCl_correctedEnergy_.clear();
-  pfclusterFromMultiCl_hits_.clear();
-  pfclusterFromMultiCl_fractions_.clear();
-  pfclusterFromMultiCl_rechits_.clear();
+  //pfclusterFromMultiCl_pos_.clear();
+  //pfclusterFromMultiCl_eta_.clear();
+  //pfclusterFromMultiCl_phi_.clear();
+  //pfclusterFromMultiCl_pt_.clear();
+  //pfclusterFromMultiCl_energy_.clear();
+  //pfclusterFromMultiCl_energyEE_.clear();
+  //pfclusterFromMultiCl_energyFH_.clear();
+  //pfclusterFromMultiCl_energyBH_.clear();
+  //pfclusterFromMultiCl_correctedEnergy_.clear();
+  //pfclusterFromMultiCl_hits_.clear();
+  //pfclusterFromMultiCl_fractions_.clear();
+  //pfclusterFromMultiCl_rechits_.clear();
 
   ////////////////////
   //  Ecal Driven Gsf Electrons From MultiClusters
@@ -1076,7 +1076,7 @@ void HGCalAnalysis::analyze(const edm::Event &iEvent, const edm::EventSetup &iSe
   const std::vector<reco::PFCluster> &pfClusters = *pfClusterHandle;
 
   iEvent.getByToken(pfClustersFromMultiCl_, pfClusterFromMultiClHandle);
-  const std::vector<reco::PFCluster> &pfClustersFromMultiCl = *pfClusterFromMultiClHandle;
+ // const std::vector<reco::PFCluster> &pfClustersFromMultiCl = *pfClusterFromMultiClHandle;
 
   const std::vector<CaloParticle> *caloParticles;
   if (readCaloParticles_) {
@@ -1437,17 +1437,17 @@ void HGCalAnalysis::analyze(const edm::Event &iEvent, const edm::EventSetup &iSe
       }
     }
 
-    simcluster_eta_.push_back(it_simClus->eta());
-    simcluster_phi_.push_back(it_simClus->phi());
-    simcluster_pt_.push_back(it_simClus->pt());
-    simcluster_energy_.push_back(it_simClus->energy());
-    simcluster_simEnergy_.push_back(it_simClus->simEnergy());
-    simcluster_hits_.push_back(hits);
-    simcluster_hits_indices_.push_back(hits_indices);
-    simcluster_fractions_.push_back(fractions);
-    simcluster_layers_.push_back(layers);
-    simcluster_wafers_.push_back(wafers);
-    simcluster_cells_.push_back(cells);
+    //simcluster_eta_.push_back(it_simClus->eta());
+    //simcluster_phi_.push_back(it_simClus->phi());
+    //simcluster_pt_.push_back(it_simClus->pt());
+    //simcluster_energy_.push_back(it_simClus->energy());
+    //simcluster_simEnergy_.push_back(it_simClus->simEnergy());
+    //simcluster_hits_.push_back(hits);
+    //simcluster_hits_indices_.push_back(hits_indices);
+    //simcluster_fractions_.push_back(fractions);
+    //simcluster_layers_.push_back(layers);
+    //simcluster_wafers_.push_back(wafers);
+    //simcluster_cells_.push_back(cells);
 
   }  // end loop over simClusters
 
@@ -1462,25 +1462,25 @@ void HGCalAnalysis::analyze(const edm::Event &iEvent, const edm::EventSetup &iSe
       hits.push_back(it_haf->first);
       fractions.push_back(it_haf->second);
     }
-    pfcluster_eta_.push_back(it_pfClus->eta());
-    pfcluster_phi_.push_back(it_pfClus->phi());
-    pfcluster_pt_.push_back(it_pfClus->pt());
-    pfcluster_energy_.push_back(it_pfClus->energy());
-    pfcluster_correctedEnergy_.push_back(it_pfClus->correctedEnergy());
-    pfcluster_hits_.push_back(hits);
-    pfcluster_fractions_.push_back(fractions);
+    //pfcluster_eta_.push_back(it_pfClus->eta());
+    //pfcluster_phi_.push_back(it_pfClus->phi());
+    //pfcluster_pt_.push_back(it_pfClus->pt());
+    //pfcluster_energy_.push_back(it_pfClus->energy());
+    //pfcluster_correctedEnergy_.push_back(it_pfClus->correctedEnergy());
+    //pfcluster_hits_.push_back(hits);
+    //pfcluster_fractions_.push_back(fractions);
 
   }  // end loop over pfClusters
-
+/*
   // loop over pfClusters From MultiClusters (python label particleFlowClusterHGCalFromMultiCl)
   for (std::vector<reco::PFCluster>::const_iterator it_pfClus = pfClustersFromMultiCl.begin();
        it_pfClus != pfClustersFromMultiCl.end(); ++it_pfClus) {
     const std::vector<std::pair<DetId, float>> hits_and_fractions = it_pfClus->hitsAndFractions();
-    std::vector<uint32_t> hits;
-    std::vector<float> fractions;
-    float energyEE = 0.;
-    float energyFH = 0.;
-    float energyBH = 0.;
+//    std::vector<uint32_t> hits;
+//    std::vector<float> fractions;
+//    float energyEE = 0.;
+//    float energyFH = 0.;
+//    float energyBH = 0.;
     for (std::vector<std::pair<DetId, float>>::const_iterator it_haf = hits_and_fractions.begin();
          it_haf != hits_and_fractions.end(); ++it_haf) {
       hits.push_back(it_haf->first);
@@ -1499,25 +1499,25 @@ void HGCalAnalysis::analyze(const edm::Event &iEvent, const edm::EventSetup &iSe
           assert(false);
       }
     }
-    pfclusterFromMultiCl_pos_.push_back(it_pfClus->position());
-    pfclusterFromMultiCl_eta_.push_back(it_pfClus->eta());
-    pfclusterFromMultiCl_phi_.push_back(it_pfClus->phi());
-    pfclusterFromMultiCl_pt_.push_back(it_pfClus->pt());
-    pfclusterFromMultiCl_energy_.push_back(it_pfClus->energy());
-    pfclusterFromMultiCl_energyEE_.push_back(energyEE);
-    pfclusterFromMultiCl_energyFH_.push_back(energyFH);
-    pfclusterFromMultiCl_energyBH_.push_back(energyBH);
-    pfclusterFromMultiCl_correctedEnergy_.push_back(it_pfClus->correctedEnergy());
-    pfclusterFromMultiCl_hits_.push_back(hits);
-    pfclusterFromMultiCl_fractions_.push_back(fractions);
-    std::vector<uint32_t> rechits_indices;
+    //pfclusterFromMultiCl_pos_.push_back(it_pfClus->position());
+    //pfclusterFromMultiCl_eta_.push_back(it_pfClus->eta());
+    //pfclusterFromMultiCl_phi_.push_back(it_pfClus->phi());
+    //pfclusterFromMultiCl_pt_.push_back(it_pfClus->pt());
+    //pfclusterFromMultiCl_energy_.push_back(it_pfClus->energy());
+    //pfclusterFromMultiCl_energyEE_.push_back(energyEE);
+    //pfclusterFromMultiCl_energyFH_.push_back(energyFH);
+    //pfclusterFromMultiCl_energyBH_.push_back(energyBH);
+    //pfclusterFromMultiCl_correctedEnergy_.push_back(it_pfClus->correctedEnergy());
+    //pfclusterFromMultiCl_hits_.push_back(hits);
+    //pfclusterFromMultiCl_fractions_.push_back(fractions);
+    //std::vector<uint32_t> rechits_indices;
     for (auto const i : hits) {
       assert(detIdToRecHitIndexMap_.find(i) != detIdToRecHitIndexMap_.end());
       rechits_indices.push_back(detIdToRecHitIndexMap_[i]);
     }
     pfclusterFromMultiCl_rechits_.push_back(rechits_indices);
   }  // end loop over pfClusters From MultiClusters
-
+*/
   // Loop over Ecal Driven Gsf Electrons From MultiClusters
   if (storeElectrons_) {
     for (auto const &ele : electrons) {
@@ -1535,9 +1535,9 @@ void HGCalAnalysis::analyze(const edm::Event &iEvent, const edm::EventSetup &iSe
             auto pfClusterKey = electrons_ValueMapClusters[*cl].key();
             pfclustersIndex.push_back(pfClusterKey);
             // Redefine HoE for the HGCAL case
-            energyEE += pfclusterFromMultiCl_energyEE_[pfClusterKey];
-            energyFH += pfclusterFromMultiCl_energyFH_[pfClusterKey];
-            energyBH += pfclusterFromMultiCl_energyBH_[pfClusterKey];
+            //energyEE += pfclusterFromMultiCl_energyEE_[pfClusterKey];
+            //energyFH += pfclusterFromMultiCl_energyFH_[pfClusterKey];
+            //energyBH += pfclusterFromMultiCl_energyBH_[pfClusterKey];
             if (false) {
               std::cout << " PFCluster key: " << electrons_ValueMapClusters[*cl].key() << std::endl;
               std::cout << " PFCluster looks like: " << (*electrons_ValueMapClusters[*cl])
@@ -1553,7 +1553,7 @@ void HGCalAnalysis::analyze(const edm::Event &iEvent, const edm::EventSetup &iSe
                 if (pfrh.recHitRef().isAvailable()) std::cout << pfrh << std::endl;
               }
             }  // end of DEBUG section
-            assert(pfClusterKey <= pfclusterFromMultiCl_eta_.size());
+        //    assert(pfClusterKey <= pfclusterFromMultiCl_eta_.size());
           }
           hoe = (energyFH + energyBH) / (energyEE + energyFH + energyBH);
         }  // is within HGCAL
@@ -1780,10 +1780,10 @@ int HGCalAnalysis::fillLayerCluster(const edm::Ptr<reco::CaloCluster> &layerClus
   std::vector<unsigned int> rhIndices;
   int ncoreHit = 0;
   int layer = 0;
-  int rhSeed = 0;
-  if (!fillRecHits) {
-    rhSeed = -1;
-  }
+//  int rhSeed = 0;
+//  if (!fillRecHits) {
+//    rhSeed = -1;
+//  }
   float maxEnergy = -1.;
   Double_t pcavars[3];
   unsigned hfsize = hf.size();
@@ -1832,7 +1832,7 @@ int HGCalAnalysis::fillLayerCluster(const edm::Ptr<reco::CaloCluster> &layerClus
         // std::cout << "in fillLayerCluster: first hit energy: " << maxEnergy
         // << std::endl;
         if (hit->energy() > maxEnergy) {
-          rhSeed = rechit_index_;
+//          rhSeed = rechit_index_;
           maxEnergy = hit->energy();
         }
         rhIndices.push_back(rechit_index_);
@@ -1845,21 +1845,21 @@ int HGCalAnalysis::fillLayerCluster(const edm::Ptr<reco::CaloCluster> &layerClus
     }
   }
 
-  double pt = layerCluster->energy() / cosh(layerCluster->eta());
-
-  cluster2d_eta_.push_back(layerCluster->eta());
-  cluster2d_phi_.push_back(layerCluster->phi());
-  cluster2d_pt_.push_back(pt);
-  cluster2d_energy_.push_back(layerCluster->energy());
-  cluster2d_x_.push_back(layerCluster->x());
-  cluster2d_y_.push_back(layerCluster->y());
-  cluster2d_z_.push_back(layerCluster->z());
-  cluster2d_layer_.push_back(layer);
-  cluster2d_nhitCore_.push_back(ncoreHit);
-  cluster2d_nhitAll_.push_back(hf.size());
-  cluster2d_multicluster_.push_back(multiClusterIndex);
-  cluster2d_rechitSeed_.push_back(rhSeed);
-  cluster2d_rechits_.push_back(rhIndices);
+  //double pt = layerCluster->energy() / cosh(layerCluster->eta());
+//
+  //cluster2d_eta_.push_back(layerCluster->eta());
+  //cluster2d_phi_.push_back(layerCluster->phi());
+  //cluster2d_pt_.push_back(pt);
+  //cluster2d_energy_.push_back(layerCluster->energy());
+  //cluster2d_x_.push_back(layerCluster->x());
+  //cluster2d_y_.push_back(layerCluster->y());
+  //cluster2d_z_.push_back(layerCluster->z());
+  //cluster2d_layer_.push_back(layer);
+  //cluster2d_nhitCore_.push_back(ncoreHit);
+  //cluster2d_nhitAll_.push_back(hf.size());
+  //cluster2d_multicluster_.push_back(multiClusterIndex);
+  //cluster2d_rechitSeed_.push_back(rhSeed);
+  //cluster2d_rechits_.push_back(rhIndices);
 
   storedLayerClusters_.insert(layerCluster);
   ++cluster_index_;
@@ -1868,47 +1868,47 @@ int HGCalAnalysis::fillLayerCluster(const edm::Ptr<reco::CaloCluster> &layerClus
 
 void HGCalAnalysis::fillRecHit(const DetId &detid, const float &fraction, const unsigned int &layer,
                                const int &cluster_index_) {
-  // std::cout << "in fillRecHit" << std::endl;
-  int flags = 0x0;
-  if (fraction > 0. && fraction < 1.)
-    flags = 0x1;
-  else if (fraction < 0.)
-    flags = 0x3;
-  else if (fraction == 0.)
-    flags = 0x2;
+ // // std::cout << "in fillRecHit" << std::endl;
+ // int flags = 0x0;
+//  if (fraction > 0. && fraction < 1.)
+//    flags = 0x1;
+//  else if (fraction < 0.)
+//    flags = 0x3;
+//  else if (fraction == 0.)
+//    flags = 0x2;
   const HGCRecHit *hit = hitmap_[detid];
-
-  const GlobalPoint position = recHitTools_.getPosition(detid);
-  const unsigned int wafer =
-      (DetId::Forward == DetId(detid).det() ? recHitTools_.getWafer(detid)
+/*
+ // const GlobalPoint position = recHitTools_.getPosition(detid);
+ const unsigned int wafer =
+/*      (DetId::Forward == DetId(detid).det() ? recHitTools_.getWafer(detid)
                                             : std::numeric_limits<unsigned int>::max());
-  const unsigned int cell =
-      (DetId::Forward == DetId(detid).det() ? recHitTools_.getCell(detid)
+ const unsigned int cell =
+/*      (DetId::Forward == DetId(detid).det() ? recHitTools_.getCell(detid)
                                             : std::numeric_limits<unsigned int>::max());
-  const double cellThickness =
-      (DetId::Forward == DetId(detid).det() ? recHitTools_.getSiThickness(detid)
-                                            : std::numeric_limits<std::float_t>::max());
-  const bool isHalfCell = recHitTools_.isHalfCell(detid);
-  const double eta = recHitTools_.getEta(position, vz_);
-  const double phi = recHitTools_.getPhi(position);
-  const double pt = recHitTools_.getPt(position, hit->energy(), vz_);
-
+ const double cellThickness =
+/*      (DetId::Forward == DetId(detid).det() ? recHitTools_.getSiThickness(detid)
+/*                                            : std::numeric_limits<std::float_t>::max());
+ /*const bool isHalfCell = recHitTools_.isHalfCell(detid);
+ /*const double eta = recHitTools_.getEta(position, vz_);
+ const double phi = recHitTools_.getPhi(position);
+ const double pt = recHitTools_.getPt(position, hit->energy(), vz_);
+*/
   // fill the vectors
-  rechit_eta_.push_back(eta);
-  rechit_phi_.push_back(phi);
-  rechit_pt_.push_back(pt);
+//  rechit_eta_.push_back(eta);
+  //rechit_phi_.push_back(phi);
+//  rechit_pt_.push_back(pt);
   rechit_energy_.push_back(hit->energy());
-  rechit_layer_.push_back(layer);
-  rechit_wafer_.push_back(wafer);
-  rechit_cell_.push_back(cell);
+//  rechit_layer_.push_back(layer);
+//  rechit_wafer_.push_back(wafer);
+//  rechit_cell_.push_back(cell);
   rechit_detid_.push_back(detid);
-  rechit_x_.push_back(position.x());
-  rechit_y_.push_back(position.y());
-  rechit_z_.push_back(position.z());
-  rechit_time_.push_back(hit->time());
-  rechit_thickness_.push_back(cellThickness);
-  rechit_isHalf_.push_back(isHalfCell);
-  rechit_flags_.push_back(flags);
+//  rechit_x_.push_back(position.x());
+//  rechit_y_.push_back(position.y());
+//  rechit_z_.push_back(position.z());
+//  rechit_time_.push_back(hit->time());
+//  rechit_thickness_.push_back(cellThickness);
+//  rechit_isHalf_.push_back(isHalfCell);
+//  rechit_flags_.push_back(flags);
   rechit_cluster2d_.push_back(cluster_index_);
 
   storedRecHits_.insert(detid);

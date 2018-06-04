@@ -15,12 +15,14 @@ process.GlobalTag = GlobalTag(process.GlobalTag, 'auto:phase2_realistic', '')
 from FastSimulation.Event.ParticleFilter_cfi import *
 from RecoLocalCalo.HGCalRecProducers.HGCalRecHit_cfi import dEdX_weights as dEdX
 
-process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(10) )
+process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(1000) )
 
 process.source = cms.Source("PoolSource",
     # replace 'myfile.root' with the source file you want to use
     fileNames = cms.untracked.vstring(
-        '/store/mc/PhaseIITDRFall17DR/SingleGammaPt100Eta1p6_2p8/GEN-SIM-RECO/noPUFEVT_93X_upgrade2023_realistic_v2-v1/90000/02F2B8A2-44AA-E711-BD55-7845C4FC38ED.root'
+#        '/store/mc/PhaseIITDRFall17DR/SingleElectronPt5_100Eta1p6_2p8/GEN-SIM-RECO/noPUFEVT_93X_upgrade2023_realistic_v2-v1/30000/FA67757F-4AAC-E711-A153-0025904C66F2.root'
+'/store/mc/PhaseIITDRFall17DR/SingleElectronPt5_100Eta1p6_2p8/GEN-SIM-RECO/PU200FEVT_93X_upgrade2023_realistic_v2-v2/30000/E2FE9C11-04BA-E711-8197-FA163E6DDFF6.root',
+'/store/mc/PhaseIITDRFall17DR/SingleElectronPt5_100Eta1p6_2p8/GEN-SIM-RECO/PU200FEVT_93X_upgrade2023_realistic_v2-v2/150000/F6DE47E4-ACB8-E711-BB61-FA163ECAA243.root'
     ),
     duplicateCheckMode = cms.untracked.string("noDuplicateCheck")
 )
@@ -28,12 +30,12 @@ process.source = cms.Source("PoolSource",
 process.ana = cms.EDAnalyzer('HGCalAnalysis',
                              detector = cms.string("all"),
                              rawRecHits = cms.bool(True),
-                             readCaloParticles = cms.bool(True),
+                             readCaloParticles = cms.bool(False),
                              storeGenParticleOrigin = cms.bool(True),
                              storeGenParticleExtrapolation = cms.bool(True),
                              storePCAvariables = cms.bool(False),
-                             storeElectrons = cms.bool(True),
-                             storePFCandidates = cms.bool(True),
+                             storeElectrons = cms.bool(False),
+                             storePFCandidates = cms.bool(False),
                              readGenParticles = cms.bool(True),
                              recomputePCA = cms.bool(False),
                              includeHaloPCA = cms.bool(True),
@@ -46,7 +48,7 @@ process.ana.TestParticleFilter.protonEMin = cms.double(100000)
 process.ana.TestParticleFilter.etaMax = cms.double(3.1)
 
 process.TFileService = cms.Service("TFileService",
-                                   fileName = cms.string("hgcalNtuple.root")
+                                   fileName = cms.string("hgcalNtuplePU.root")
 
                                    )
 
