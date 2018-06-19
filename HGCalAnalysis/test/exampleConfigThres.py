@@ -46,7 +46,7 @@ process.ana = cms.EDAnalyzer('HGCalAnalysis',
                              phiWidth = cms.double(0.15),
                              dEdXWeights = dEdX,
                              layerClusterPtThreshold = cms.double(-1),  # All LayerCluster belonging to a multicluster are saved; this Pt threshold applied to the others
-                             mipThreshold = cms.double(-1.),
+                             mipThreshold = cms.double(2.5),
                              TestParticleFilter = ParticleFilterBlock.ParticleFilter
 )
 
@@ -54,7 +54,7 @@ process.ana.TestParticleFilter.protonEMin = cms.double(100000)
 process.ana.TestParticleFilter.etaMax = cms.double(3.1)
 
 process.TFileService = cms.Service("TFileService",
-                                   fileName = cms.string("hgcalNtuplePU-MipNeg.root")
+                                   fileName = cms.string("hgcalNtuplePU-Mip2_5.root")
 
                                    )
 

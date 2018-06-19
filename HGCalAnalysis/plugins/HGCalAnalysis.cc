@@ -61,11 +61,7 @@
 
 #include "TTree.h"
 
-const float select_Eta = 1.8;
-const float select_dEta = 0.15;
-const float select_dPhi = 0.15;
-const bool filterPos = true;
-const bool saveRHpos = false;
+
 
 
 namespace HGCal_helpers {
@@ -193,10 +189,16 @@ class HGCalAnalysis : public edm::one::EDAnalyzer<edm::one::WatchRuns, edm::one:
   bool storePCAvariables_;
   bool storeElectrons_;
   bool storePFCandidates_;
+  double select_Eta_;
+  double select_dEta_;
+  double select_dPhi_;
+  bool filterPos_;
+  bool saveRHpos_;
   bool recomputePCA_;
   bool includeHaloPCA_;
   double layerClusterPtThreshold_;
   double propagationPtThreshold_;
+  double mipThreshold_;
   std::string detector_;
   bool rawRecHits_;
 
@@ -500,10 +502,16 @@ HGCalAnalysis::HGCalAnalysis(const edm::ParameterSet &iConfig)
       storePCAvariables_(iConfig.getParameter<bool>("storePCAvariables")),
       storeElectrons_(iConfig.getParameter<bool>("storeElectrons")),
       storePFCandidates_(iConfig.getParameter<bool>("storePFCandidates")),
+      select_Eta_(iConfig.getParameter<double>("etaPivot")),
+      select_dEta_(iConfig.getParameter<double>("etaWidth")),
+      select_dPhi_(iConfig.getParameter<double>("phiWidth")),
+      filterPos_(iConfig.getParameter<bool>("selectRecHits")),
+      saveRHpos_(iConfig.getParameter<bool>("saveRHpos")),
       recomputePCA_(iConfig.getParameter<bool>("recomputePCA")),
       includeHaloPCA_(iConfig.getParameter<bool>("includeHaloPCA")),
       layerClusterPtThreshold_(iConfig.getParameter<double>("layerClusterPtThreshold")),
       propagationPtThreshold_(iConfig.getUntrackedParameter<double>("propagationPtThreshold", 3.0)),
+      mipThreshold_(iConfig.getParameter<double>("mipThreshold")),
       detector_(iConfig.getParameter<std::string>("detector")),
       rawRecHits_(iConfig.getParameter<bool>("rawRecHits")),
       particleFilter_(iConfig.getParameter<edm::ParameterSet>("TestParticleFilter")),
@@ -619,7 +627,7 @@ HGCalAnalysis::HGCalAnalysis(const edm::ParameterSet &iConfig)
   t_->Branch("rechit_cluster2d", &rechit_cluster2d_);
 
 //  t_->Branch("rechit_pt", &rechit_pt_);
-  if (saveRHpos){
+  if (saveRHpos_){
       t_->Branch("rechit_x", &rechit_x_);
       t_->Branch("rechit_y", &rechit_y_);
       t_->Branch("rechit_z", &rechit_z_);
@@ -872,7 +880,7 @@ void HGCalAnalysis::clearVariables() {
   rechit_energy_.clear();
   rechit_detid_.clear();
 
-  if (saveRHpos){
+  if (saveRHpos_){
       rechit_eta_.clear();
       rechit_phi_.clear();
       rechit_x_.clear();
@@ -1141,9 +1149,9 @@ void HGCalAnalysis::analyze(const edm::Event &iEvent, const edm::EventSetup &iSe
     math::XYZTLorentzVectorD vtx(0, 0, 0, 0);
 
     // filter genparticles
-    if (filterPos) {
+    if (filterPos_) {
 
-	if ( abs(abs(myTrack.momentum().eta()) - select_Eta) < select_dEta )
+	if ( abs(abs(myTrack.momentum().eta()) - select_Eta_) < select_dEta_ )
 	    n_selected_genpart += 1;
 	//else return; // stop processing event
 
@@ -1223,7 +1231,7 @@ void HGCalAnalysis::analyze(const edm::Event &iEvent, const edm::EventSetup &iSe
     genpart_posz_.push_back(zp);
   }
 
-  if (n_selected_genpart == 0) return;
+  if (filterPos_ && n_selected_genpart == 0) return;
 
   // associate gen particles to mothers
   genpart_mother_.resize(genpart_posz_.size(), -1);
@@ -1910,9 +1918,20 @@ void HGCalAnalysis::fillRecHit(const DetId &detid, const float &fraction, const 
 //  else if (fraction == 0.)
 //    flags = 0x2;
   const HGCRecHit *hit = hitmap_[detid];
+  double thickness =
+    (DetId::Forward == DetId(detid).det()) ? recHitTools_.getSiThickness(detid) : -1;
+  double mip = dEdXWeights_[layer] * 0.001;  // convert in GeV
+  if (thickness > 99. && thickness < 101)
+    mip *= invThicknessCorrection_[0];
+  else if (thickness > 199 && thickness < 201)
+    mip *= invThicknessCorrection_[1];
+  else if (thickness > 299 && thickness < 301)
+    mip *= invThicknessCorrection_[2];
+
+  
 /*
  const unsigned int wafer =
-/*      (DetId::Forward == DetId(detid).det() ? recHitTools_.getWafer(detid)
+      (DetId::Forward == DetId(detid).det() ? recHitTools_.getWafer(detid)
 					    : std::numeric_limits<unsigned int>::max());
  const unsigned int cell =
       (DetId::Forward == DetId(detid).det() ? recHitTools_.getCell(detid)
@@ -1929,42 +1948,44 @@ const double pt = recHitTools_.getPt(position, hit->energy(), vz_);
   const double phi = recHitTools_.getPhi(position);
 
   // filter by position
-  if (filterPos) {
-      if ( abs(abs(eta) - select_Eta) > select_dEta ) return;
+  if (filterPos_) {
+      if ( abs(abs(eta) - select_Eta_) > select_dEta_ ) return;
 
       // loop over genparticles and find matching phi
       for (unsigned i=0; i < genpart_phi_.size(); i++) {
 	  if ( genpart_eta_[i] * eta > 0 ) // rechit and genpart in same endcap
-	      if ( deltaPhi(phi,genpart_phi_[i]) > select_dPhi ) return; // skip if deltaPhi exceeded
+	      if ( deltaPhi(phi,genpart_phi_[i]) > select_dPhi_ ) return; // skip if deltaPhi exceeded
       }
   }
 
 
   // fill the vectors
-  rechit_energy_.push_back(hit->energy());
+  if (hit->energy() >= mipThreshold_ ) {
+    rechit_energy_.push_back(hit->energy());
 
-  if (saveRHpos){
-      rechit_x_.push_back(position.x());
-      rechit_y_.push_back(position.y());
-      rechit_z_.push_back(position.z());
-      rechit_eta_.push_back(eta);
-      rechit_phi_.push_back(phi);
-  }
+    if (saveRHpos_){
+        rechit_x_.push_back(position.x());
+        rechit_y_.push_back(position.y());
+        rechit_z_.push_back(position.z());
+        rechit_eta_.push_back(eta);
+        rechit_phi_.push_back(phi);
+    }
 
   //  rechit_pt_.push_back(pt);
 //  rechit_layer_.push_back(layer);
 //  rechit_wafer_.push_back(wafer);
 //  rechit_cell_.push_back(cell);
-  rechit_detid_.push_back(detid);
+    rechit_detid_.push_back(detid);
 //  rechit_time_.push_back(hit->time());
 //  rechit_thickness_.push_back(cellThickness);
 //  rechit_isHalf_.push_back(isHalfCell);
 //  rechit_flags_.push_back(flags);
-  rechit_cluster2d_.push_back(cluster_index_);
+    rechit_cluster2d_.push_back(cluster_index_);
 
-  storedRecHits_.insert(detid);
-  detIdToRecHitIndexMap_[detid] = rechit_index_;
-  ++rechit_index_;
+    storedRecHits_.insert(detid);
+    detIdToRecHitIndexMap_[detid] = rechit_index_;
+    ++rechit_index_;
+    }
 }
 
 void HGCalAnalysis::computeWidth(const reco::HGCalMultiCluster &cluster, math::XYZPoint &bar,
