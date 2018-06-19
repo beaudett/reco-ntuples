@@ -55,7 +55,6 @@ process.ana.TestParticleFilter.etaMax = cms.double(3.1)
 
 process.TFileService = cms.Service("TFileService",
                                    fileName = cms.string("hgcalNtuplePU-Mip2_5.root")
-
                                    )
 
 reRunClustering = True
