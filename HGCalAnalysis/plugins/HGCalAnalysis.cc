@@ -1179,18 +1179,18 @@ void HGCalAnalysis::analyze(const edm::Event &iEvent, const edm::EventSetup &iSe
       // genpart_mother
       int mother=-1;
       if (!myTrack.noMother()) {
-        std::cout << " Looking for mother "<< myTrack.mother().id() << std::endl;
+//        std::cout << " Looking for mother "<< myTrack.mother().id() << std::endl;
         std::map<unsigned,unsigned>::const_iterator itcheck=simToGenpartMap.find(myTrack.mother().id());
         if (itcheck!=simToGenpartMap.end()) {
           mother = itcheck->second;
-          std::cout << " Found Simtrack " <<  itcheck->first << " " << mother<< std::endl;
+//          std::cout << " Found Simtrack " <<  itcheck->first << " " << mother<< std::endl;
         }
       }
       auto orig_vtx = myTrack.vertex().position();
       HGCal_helpers::coordinates hitsHGCal;
       toHGCalPropagator.propagate(myTrack.momentum(), orig_vtx, myTrack.charge(), hitsHGCal);
       simToGenpartMap.insert(std::pair<unsigned,unsigned>(i,nstoredGenParts));
-      std::cout << " Inserting FsimTrack " << i  << " Genpart " << nstoredGenParts << std::endl;
+//      std::cout << " Inserting FsimTrack " << i  << " Genpart " << nstoredGenParts << std::endl;
 
       for (unsigned il = 0; il < nlayers; ++il) {
 
