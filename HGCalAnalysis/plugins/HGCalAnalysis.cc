@@ -236,6 +236,7 @@ class HGCalAnalysis : public edm::one::EDAnalyzer<edm::one::WatchRuns, edm::one:
   ////////////////////
   // GenParticles
   //
+  std::vector<int>   genpart_index_;
   std::vector<float> genpart_eta_;
   std::vector<float> genpart_phi_;
   std::vector<float> genpart_pt_;
@@ -256,9 +257,10 @@ class HGCalAnalysis : public edm::one::EDAnalyzer<edm::one::WatchRuns, edm::one:
   std::vector<int> genpart_gen_;
   std::vector<int> genpart_reachedEE_;
   std::vector<bool> genpart_fromBeamPipe_;
-  std::vector<std::vector<float>> genpart_posx_;
-  std::vector<std::vector<float>> genpart_posy_;
-  std::vector<std::vector<float>> genpart_posz_;
+  std::vector<float> genpart_posx_;
+  std::vector<float> genpart_posy_;
+  std::vector<float> genpart_posz_;
+  std::vector<int> genpart_layer_;
 
   ////////////////////
   // reco::GenParticles
@@ -574,6 +576,7 @@ HGCalAnalysis::HGCalAnalysis(const edm::ParameterSet &iConfig)
   t_->Branch("vtx_y", &vtx_y_);
   t_->Branch("vtx_z", &vtx_z_);
 
+  t_->Branch("genpart_index",&genpart_index_);
   t_->Branch("genpart_eta", &genpart_eta_);
   t_->Branch("genpart_phi", &genpart_phi_);
   t_->Branch("genpart_pt", &genpart_pt_);
@@ -581,11 +584,12 @@ HGCalAnalysis::HGCalAnalysis(const edm::ParameterSet &iConfig)
   t_->Branch("genpart_dvx", &genpart_dvx_);
   t_->Branch("genpart_dvy", &genpart_dvy_);
   t_->Branch("genpart_dvz", &genpart_dvz_);
+  t_->Branch("genpart_mother", &genpart_mother_);
+
   if (storeMoreGenInfo_) {
     t_->Branch("genpart_ovx", &genpart_ovx_);
     t_->Branch("genpart_ovy", &genpart_ovy_);
     t_->Branch("genpart_ovz", &genpart_ovz_);
-    t_->Branch("genpart_mother", &genpart_mother_);
   }
   if (storeGenParticleExtrapolation_) {
     t_->Branch("genpart_exphi", &genpart_exphi_);
@@ -601,6 +605,7 @@ HGCalAnalysis::HGCalAnalysis(const edm::ParameterSet &iConfig)
   t_->Branch("genpart_posx", &genpart_posx_);
   t_->Branch("genpart_posy", &genpart_posy_);
   t_->Branch("genpart_posz", &genpart_posz_);
+  t_->Branch("genpart_layer",&genpart_layer_);
 
 
   if (readGen_) {
@@ -833,6 +838,7 @@ void HGCalAnalysis::clearVariables() {
   ////////////////////
   // GenParticles
   //
+  genpart_index_.clear();
   genpart_eta_.clear();
   genpart_phi_.clear();
   genpart_pt_.clear();
@@ -856,6 +862,7 @@ void HGCalAnalysis::clearVariables() {
   genpart_posx_.clear();
   genpart_posy_.clear();
   genpart_posz_.clear();
+  genpart_layer_.clear();
 
   ////////////////////
   // reco::GenParticles
@@ -1132,103 +1139,102 @@ void HGCalAnalysis::analyze(const edm::Event &iEvent, const edm::EventSetup &iSe
 
   HGCal_helpers::simpleTrackPropagator toHGCalPropagator(aField_);
   toHGCalPropagator.setPropagationTargetZ(layerPositions_[0]);
-  std::vector<FSimTrack *> allselectedgentracks;
+
   unsigned int npart = mySimEvent_->nTracks();
+
+  // make the mother-daughter relationship
+  std::map<unsigned int, unsigned int> simToGenpartMap;
+  unsigned nstoredGenParts=0;
   for (unsigned int i = 0; i < npart; ++i) {
     std::vector<float> xp, yp, zp;
     FSimTrack &myTrack(mySimEvent_->track(i));
     math::XYZTLorentzVectorD vtx(0, 0, 0, 0);
 
     int reachedEE = 0;  // compute the extrapolations for the particles reaching EE
-                        // and for the gen particles
+    // and for the gen particles
     double fbrem = -1;
 
     if (std::abs(myTrack.vertex().position().z()) >= layerPositions_[0]) continue;
-
     unsigned nlayers =   recHitTools_.lastLayerFH();
-    if (myTrack.noEndVertex())  // || myTrack.genpartIndex()>=0)
-    {
+    if (myTrack.noEndVertex()) { // || myTrack.genpartIndex()>=0)
       HGCal_helpers::coordinates propcoords;
       bool reachesHGCal = toHGCalPropagator.propagate(
-          myTrack.momentum(), myTrack.vertex().position(), myTrack.charge(), propcoords);
-      vtx = propcoords.toVector();
+        myTrack.momentum(), myTrack.vertex().position(), myTrack.charge(), propcoords);
+        vtx = propcoords.toVector();
 
-      if (reachesHGCal && vtx.Rho() < hgcalOuterRadius_ && vtx.Rho() > hgcalInnerRadius_) {
-        reachedEE = 2;
-        double dpt = 0;
+        if (reachesHGCal && vtx.Rho() < hgcalOuterRadius_ && vtx.Rho() > hgcalInnerRadius_) {
+          reachedEE = 2;
+          double dpt = 0;
 
-        for (int i = 0; i < myTrack.nDaughters(); ++i) dpt += myTrack.daughter(i).momentum().pt();
-        if (abs(myTrack.type()) == 11) fbrem = dpt / myTrack.momentum().pt();
-      } else if (reachesHGCal && vtx.Rho() > hgcalOuterRadius_)
+          for (int i = 0; i < myTrack.nDaughters(); ++i) dpt += myTrack.daughter(i).momentum().pt();
+          if (abs(myTrack.type()) == 11) fbrem = dpt / myTrack.momentum().pt();
+        } else if (reachesHGCal && vtx.Rho() > hgcalOuterRadius_)
         reachedEE = 1;
+      }
+      if (! myTrack.noEndVertex()) { // if the particle has decayed, no need to compute all the extrapolations
+        nlayers=1;
+        vtx = myTrack.endVertex().position();
+      }
 
-      HGCal_helpers::simpleTrackPropagator indiv_particleProp(aField_);
+      // genpart_mother
+      int mother=-1;
+      if (!myTrack.noMother()) {
+        std::cout << " Looking for mother "<< myTrack.mother().id() << std::endl;
+        std::map<unsigned,unsigned>::const_iterator itcheck=simToGenpartMap.find(myTrack.mother().id());
+        if (itcheck!=simToGenpartMap.end()) {
+          mother = itcheck->second;
+          std::cout << " Found Simtrack " <<  itcheck->first << " " << mother<< std::endl;
+        }
+      }
+      auto orig_vtx = myTrack.vertex().position();
+      HGCal_helpers::coordinates hitsHGCal;
+      toHGCalPropagator.propagate(myTrack.momentum(), orig_vtx, myTrack.charge(), hitsHGCal);
+      simToGenpartMap.insert(std::pair<unsigned,unsigned>(i,nstoredGenParts));
+      std::cout << " Inserting FsimTrack " << i  << " Genpart " << nstoredGenParts << std::endl;
+
       for (unsigned il = 0; il < nlayers; ++il) {
+
+        HGCal_helpers::simpleTrackPropagator indiv_particleProp(aField_);
+
         const float charge = myTrack.charge();
         indiv_particleProp.setPropagationTargetZ(layerPositions_[il]);
         HGCal_helpers::coordinates propCoords;
         indiv_particleProp.propagate(myTrack.momentum(), myTrack.vertex().position(), charge,
-                                     propCoords);
+        propCoords);
 
-        xp.push_back(propCoords.x);
-        yp.push_back(propCoords.y);
-        zp.push_back(propCoords.z);
-      }
-    } else {
-      vtx = myTrack.endVertex().position();
-    }
-    auto orig_vtx = myTrack.vertex().position();
+        genpart_posx_.push_back(propCoords.x);
+        genpart_posy_.push_back(propCoords.y);
+        genpart_posz_.push_back(propCoords.z);
+        genpart_layer_.push_back(il);
 
-    allselectedgentracks.push_back(&mySimEvent_->track(i));
-    // fill branches
-    genpart_eta_.push_back(myTrack.momentum().eta());
-    genpart_phi_.push_back(myTrack.momentum().phi());
-    genpart_pt_.push_back(myTrack.momentum().pt());
-    genpart_energy_.push_back(myTrack.momentum().energy());
-    genpart_dvx_.push_back(vtx.x());
-    genpart_dvy_.push_back(vtx.y());
-    genpart_dvz_.push_back(vtx.z());
 
-    genpart_ovx_.push_back(orig_vtx.x());
-    genpart_ovy_.push_back(orig_vtx.y());
-    genpart_ovz_.push_back(orig_vtx.z());
+        genpart_mother_.push_back(mother);
 
-    HGCal_helpers::coordinates hitsHGCal;
-    toHGCalPropagator.propagate(myTrack.momentum(), orig_vtx, myTrack.charge(), hitsHGCal);
+        // fill branches
+        genpart_index_.push_back(nstoredGenParts);
+        genpart_eta_.push_back(myTrack.momentum().eta());
+        genpart_phi_.push_back(myTrack.momentum().phi());
+        genpart_pt_.push_back(myTrack.momentum().pt());
+        genpart_energy_.push_back(myTrack.momentum().energy());
+        genpart_dvx_.push_back(vtx.x());
+        genpart_dvy_.push_back(vtx.y());
+        genpart_dvz_.push_back(vtx.z());
+        genpart_ovx_.push_back(orig_vtx.x());
+        genpart_ovy_.push_back(orig_vtx.y());
+        genpart_ovz_.push_back(orig_vtx.z());
+        genpart_exphi_.push_back(hitsHGCal.phi);
+        genpart_exeta_.push_back(hitsHGCal.eta);
+        genpart_exx_.push_back(hitsHGCal.x);
+        genpart_exy_.push_back(hitsHGCal.y);
 
-    genpart_exphi_.push_back(hitsHGCal.phi);
-    genpart_exeta_.push_back(hitsHGCal.eta);
-    genpart_exx_.push_back(hitsHGCal.x);
-    genpart_exy_.push_back(hitsHGCal.y);
-
-    genpart_fbrem_.push_back(fbrem);
-    genpart_pid_.push_back(myTrack.type());
-    genpart_gen_.push_back(myTrack.genpartIndex());
-    genpart_reachedEE_.push_back(reachedEE);
-    genpart_fromBeamPipe_.push_back(true);
-
-    genpart_posx_.push_back(xp);
-    genpart_posy_.push_back(yp);
-    genpart_posz_.push_back(zp);
-  }
-
-  // associate gen particles to mothers
-  genpart_mother_.resize(genpart_posz_.size(), -1);
-  for (size_t i = 0; i < allselectedgentracks.size(); i++) {
-    const auto tracki = allselectedgentracks.at(i);
-
-    for (size_t j = i + 1; j < allselectedgentracks.size(); j++) {
-      const auto trackj = allselectedgentracks.at(j);
-
-      if (!tracki->noMother()) {
-        if (&tracki->mother() == trackj) genpart_mother_.at(i) = j;
-      }
-      if (!trackj->noMother()) {
-        if (&trackj->mother() == tracki) genpart_mother_.at(j) = i;
+        genpart_fbrem_.push_back(fbrem);
+        genpart_pid_.push_back(myTrack.type());
+        genpart_gen_.push_back(myTrack.genpartIndex());
+        genpart_reachedEE_.push_back(reachedEE);
+        genpart_fromBeamPipe_.push_back(true);
+        ++nstoredGenParts;
       }
     }
-  }
-
   // make a map detid-rechit
   hitmap_.clear();
   switch (algo_) {
@@ -1802,7 +1808,7 @@ int HGCalAnalysis::fillLayerCluster(const edm::Ptr<reco::CaloCluster> &layerClus
   if (!fillRecHits) {
     rhSeed = -1;
   }
-  float maxEnergy = -1.;
+//  float maxEnergy = -1.;
   Double_t pcavars[3];
   unsigned hfsize = hf.size();
 
