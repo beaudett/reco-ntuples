@@ -208,7 +208,8 @@ class HGCalAnalysis : public edm::one::EDAnalyzer<edm::one::WatchRuns, edm::one:
   edm::EDGetTokenT<std::vector<reco::PFCluster>> pfClusters_;
   edm::EDGetTokenT<std::vector<reco::PFCluster>> pfClustersFromMultiCl_;
   edm::EDGetTokenT<std::vector<CaloParticle>> caloParticles_;
-  edm::EDGetTokenT<std::vector<reco::HGCalMultiCluster>> multiClusters_;
+  edm::EDGetTokenT<std::vector<reco::
+HGCalMultiCluster>> multiClusters_;
   edm::EDGetTokenT<std::vector<SimTrack>> simTracks_;
   edm::EDGetTokenT<std::vector<SimVertex>> simVertices_;
   edm::EDGetTokenT<edm::HepMCProduct> hev_;
@@ -543,8 +544,8 @@ HGCalAnalysis::HGCalAnalysis(const edm::ParameterSet &iConfig)
   pfClusters_ = consumes<std::vector<reco::PFCluster>>(edm::InputTag("particleFlowClusterHGCal"));
   pfClustersFromMultiCl_ =
       consumes<std::vector<reco::PFCluster>>(edm::InputTag("particleFlowClusterHGCalFromMultiCl"));
-  multiClusters_ =
-      consumes<std::vector<reco::HGCalMultiCluster>>(edm::InputTag("hgcalLayerClusters"));
+//  multiClusters_ =
+//      consumes<std::vector<reco::HGCalMultiCluster>>(edm::InputTag("hgcalLayerClusters"));
   tracks_ = consumes<std::vector<reco::Track>>(edm::InputTag("generalTracks"));
   electrons_ =
       consumes<std::vector<reco::GsfElectron>>(edm::InputTag("ecalDrivenGsfElectronsFromMultiCl"));
@@ -1101,7 +1102,7 @@ void HGCalAnalysis::analyze(const edm::Event &iEvent, const edm::EventSetup &iSe
   auto const &electrons_ValueMapClusters = *electrons_ValueMapClustersHandle;
 
   Handle<std::vector<reco::HGCalMultiCluster>> multiClusterHandle;
-  iEvent.getByToken(multiClusters_, multiClusterHandle);
+//  iEvent.getByToken(multiClusters_, multiClusterHandle);
   const std::vector<reco::HGCalMultiCluster> &multiClusters = *multiClusterHandle;
 
   Handle<std::vector<reco::Vertex>> verticesHandle;
@@ -1266,6 +1267,7 @@ void HGCalAnalysis::analyze(const edm::Event &iEvent, const edm::EventSetup &iSe
   rechit_index_ = 0;
   storedLayerClusters_.clear();
   storedRecHits_.clear();
+/*
   for (unsigned int i = 0; i < multiClusters.size(); i++) {
     int cl2dSeed = 0;
     std::set<int> layers;
@@ -1338,7 +1340,7 @@ void HGCalAnalysis::analyze(const edm::Event &iEvent, const edm::EventSetup &iSe
       multiclus_eigenSig3_.push_back(sigmas(2));
     }
   }  // end of loop on multiclusters
-
+*/
   // Fills the additional 2d layers
   for (unsigned ic = 0; ic < nclus; ++ic) {
     edm::Ptr<reco::BasicCluster> clusterPtr(clusterHandle, ic);

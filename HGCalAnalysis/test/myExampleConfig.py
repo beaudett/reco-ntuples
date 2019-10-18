@@ -21,7 +21,7 @@ process.source = cms.Source("PoolSource",
     # replace 'myfile.root' with the source file you want to use
     fileNames = cms.untracked.vstring(
 #        'root://eosuser.cern.ch//eos/user/b/beaudett/local/hgcal/FlatRandomPtGunProducer_test_beaudett_20180914/RECO/partGun_PDGid11_x500_Pt35.0To35.0_RECO_1.root'
-'/grid_mnt/data_cms_upgrade/beaudette/devel/fullsim/prod_gilles_2/CMSSW_10_2_0/src/prod-Geant/partGun_PDGid11-22-211_Pt35_RECO_1.root'
+'file:/grid_mnt/data_cms_upgrade/beaudette/devel/fullsim/prod_gilles_2/CMSSW_10_2_0/src/prod-Geant/partGun_PDGid11-22-211_Pt35_RECO_1.root'
     ),
     duplicateCheckMode = cms.untracked.string("noDuplicateCheck")
 )
@@ -51,7 +51,7 @@ process.TFileService = cms.Service("TFileService",
 
                                    )
 
-reRunClustering = True
+reRunClustering = False
 
 if reRunClustering:
     #process.hgcalLayerClusters.minClusters = cms.uint32(0)
