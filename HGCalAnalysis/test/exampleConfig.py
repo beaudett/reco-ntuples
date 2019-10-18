@@ -9,29 +9,24 @@ process.load('Configuration.StandardSequences.MagneticField_cff')
 process.load('Configuration.EventContent.EventContent_cff')
 process.load("FWCore.MessageService.MessageLogger_cfi")
 process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
-try:
-    process.load('RecoLocalCalo.HGCalRecProducers.HGCalLocalRecoSequence_cff')
-except Exception: # ConfigFileReadError in case config does not exist
-    process.load('SimCalorimetry.HGCalSimProducers.hgcalDigitizer_cfi')
-    process.load('RecoLocalCalo.HGCalRecProducers.hgcalLayerClusters_cff')
+process.load('RecoLocalCalo.HGCalRecProducers.HGCalLocalRecoSequence_cff')
 from Configuration.AlCa.GlobalTag import GlobalTag
 process.GlobalTag = GlobalTag(process.GlobalTag, 'auto:phase2_realistic', '')
 from FastSimulation.Event.ParticleFilter_cfi import *
 from RecoLocalCalo.HGCalRecProducers.HGCalRecHit_cfi import dEdX_weights as dEdX
 
-process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(10) )
+process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(-1) )
 
 process.source = cms.Source("PoolSource",
     # replace 'myfile.root' with the source file you want to use
     fileNames = cms.untracked.vstring(
-        '/store/mc/PhaseIITDRFall17DR/SingleGammaPt100Eta1p6_2p8/GEN-SIM-RECO/noPUFEVT_93X_upgrade2023_realistic_v2-v1/90000/02F2B8A2-44AA-E711-BD55-7845C4FC38ED.root'
+        'root://eosuser.cern.ch//eos/user/b/beaudett/local/hgcal/FlatRandomPtGunProducer_test_beaudett_20180914/RECO/partGun_PDGid11_x500_Pt35.0To35.0_RECO_1.root'
     ),
     duplicateCheckMode = cms.untracked.string("noDuplicateCheck")
 )
 
 process.ana = cms.EDAnalyzer('HGCalAnalysis',
                              detector = cms.string("all"),
-                             inputTag_HGCalMultiCluster = cms.string("hgcalLayerClusters"),
                              rawRecHits = cms.bool(True),
                              readCaloParticles = cms.bool(True),
                              storeGenParticleOrigin = cms.bool(True),
